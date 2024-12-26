@@ -1,5 +1,5 @@
 from django import forms
-from .models import Inventario, Users, Galeria
+from .models import Inventario, Users, Galeria, TipoObjeto
 
 class InventarioForm(forms.ModelForm):
     class Meta:
@@ -8,6 +8,11 @@ class InventarioForm(forms.ModelForm):
         widgets = {
             'galeria': forms.URLInput(attrs={'placeholder': 'Ingrese la URL de la imagen'}),
         }
+        
+class TipoObjetoForm(forms.ModelForm):
+    class Meta:
+        model = TipoObjeto
+        fields = ['tipo_objeto']
 
 class UsersForm(forms.ModelForm):
     class Meta:
