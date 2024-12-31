@@ -41,31 +41,25 @@ class Inventario(models.Model):
         choices=CURSO_CHOICES,
         default='sin_empezar'
     )
-    fecha_salida = models.DateField()
-    tags = models.CharField(max_length=100)
-    descripcion = models.TextField()
-    foto = models.CharField(max_length=200)
-    edicion = models.CharField(max_length=100)
-    editorial = models.CharField(max_length=100)
-    volumen = models.IntegerField()
-    autor = models.CharField(max_length=100)
-    genero = models.CharField(max_length=100)
-    altura = models.IntegerField()
-    marca = models.CharField(max_length=100)
-    plataforma = models.CharField(max_length=100)
-    compania = models.CharField(max_length=100)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    cantidad = models.IntegerField()
+    fecha_salida = models.DateField(null=True, blank=True)
+    tags = models.CharField(max_length=100, null=True, blank=True)
+    descripcion = models.TextField(null=True, blank=True)
+    foto = models.CharField(max_length=200, null=True, blank=True)
+    edicion = models.CharField(max_length=100, null=True, blank=True)
+    editorial = models.CharField(max_length=100, null=True, blank=True)
+    volumen = models.IntegerField(null=True, blank=True)
+    autor = models.CharField(max_length=100, null=True, blank=True)
+    genero = models.CharField(max_length=100, null=True, blank=True)
+    altura = models.IntegerField(null=True, blank=True)
+    marca = models.CharField(max_length=100, null=True, blank=True)
+    plataforma = models.CharField(max_length=100, null=True, blank=True)
+    compania = models.CharField(max_length=100, null=True, blank=True)
+    precio = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    cantidad = models.IntegerField(null=True, blank=True)
     
-    id_usuario = models.ForeignKey(Users, on_delete=models.CASCADE)
-    id_tipoobjeto = models.ForeignKey(TipoObjeto, on_delete=models.CASCADE)
+    id_usuario = models.ForeignKey(Users, on_delete=models.CASCADE, null=True, blank=True)
+    id_tipoobjeto = models.ForeignKey(TipoObjeto, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.nombre_objeto
 
-class Galeria(models.Model):
-    id_inventario = models.ForeignKey(Inventario, on_delete=models.CASCADE)
-    galeria = models.CharField(max_length=200)
-    
-    def __str__(self):
-        return self.galeria

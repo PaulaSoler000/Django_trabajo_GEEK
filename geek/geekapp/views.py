@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Inventario, Users, Galeria, TipoObjeto
-from .forms import InventarioForm, UsersForm, GaleriaForm, TipoObjetoForm
+from .models import Inventario, Users, TipoObjeto
+from .forms import InventarioForm, TipoObjetoForm
 
 from django.contrib import messages
-
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -15,27 +14,37 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('inventario')
+            messages.success(request, "Registro exitoso. Bienvenido!")
+            return redirect(index_inventario)
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('inventario')
-    return render(request, 'login.html')
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"Bienvenido de nuevo, {username}!")
+                return redirect(index_inventario)
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
+
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.info(request, "Has cerrado sesión exitosamente.")
+    return redirect('login')
 
 @login_required
 def index_inventario(request):
     inventario = Inventario.objects.filter(id_usuario=request.user)
     return render(request, 'index_inventario.html', {'inventario': inventario})
-
-
 # Inventario
 """ def index_inventario(request):
     inventario = Inventario.objects.all()
@@ -78,7 +87,7 @@ def eliminar_inventario(request, id):
 
 # Users
 
-def index_users(request):
+""" def index_users(request):
     users = Users.objects.all()
     return render(request, 'index_users.html', {'users': users})
 
@@ -114,7 +123,7 @@ def eliminar_users(request, id):
         return redirect(index_users)
     return render(request, 'eliminar_users.html', {'users': users})
 
-
+ """
 # tipoObjeto	
 
 def index_tipoObjeto(request):
@@ -153,42 +162,4 @@ def eliminar_tipoObjeto(request, id):
         return redirect(index_tipoObjeto)
     return render(request, 'eliminar_tipoObjeto.html', {'tipoObjeto': tipoObjeto})
 
-
-# galeria
-
-def index_galeria(request):
-    galeria = Galeria.objects.all()
-    return render(request, 'index_galeria.html', {'galeria': galeria})
-
-def ver_galeria(request, id):
-    galeria = Galeria.objects.get(id=id)
-    return render(request, 'ver_galeria.html', {'galeria': galeria})
-
-def crear_galeria(request):
-    if request.method == 'POST':
-        form = GaleriaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(index_galeria)
-    else:
-        form = GaleriaForm()
-    return render(request, 'crear_galeria.html', {'form': form})
-
-def editar_galeria(request, id):
-    galeria = Galeria.objects.get(id=id)
-    if request.method == 'POST':
-        form = GaleriaForm(request.POST, instance=galeria)
-        if form.is_valid():
-            form.save()
-            return redirect(index_galeria)
-    else:
-        form = GaleriaForm(instance=galeria)
-    return render(request, 'editar_galeria.html', {'form': form})
-
-def eliminar_galeria(request, id):
-    galeria = Galeria.objects.get(id=id)
-    if request.method == 'POST' or request.method == 'DELETE':
-        galeria.delete()
-        return redirect(index_galeria)
-    return render(request, 'eliminar_galeria.html', {'galeria': galeria})
 
