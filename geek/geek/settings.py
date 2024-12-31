@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'geekapp'
 ]
 
+AUTH_USER_MODEL = 'geekapp.CustomUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

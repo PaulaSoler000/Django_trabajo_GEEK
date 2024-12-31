@@ -1,28 +1,27 @@
 from django.shortcuts import render, redirect
-from .models import Inventario, Users, TipoObjeto
-from .forms import InventarioForm, TipoObjetoForm
+from .models import Inventario, CustomUser, TipoObjeto
+from .forms import InventarioForm, TipoObjetoForm, CustomUserCreationForm, CustomAuthenticationForm
 
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 def register_view(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             messages.success(request, "Registro exitoso. Bienvenido!")
             return redirect(index_inventario)
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -32,7 +31,7 @@ def login_view(request):
                 messages.success(request, f"Bienvenido de nuevo, {username}!")
                 return redirect(index_inventario)
     else:
-        form = AuthenticationForm()
+        form = CustomAuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
 @login_required
@@ -41,16 +40,15 @@ def logout_view(request):
     messages.info(request, "Has cerrado sesión exitosamente.")
     return redirect('login')
 
+
 @login_required
 def index_inventario(request):
     inventario = Inventario.objects.filter(id_usuario=request.user)
     return render(request, 'index_inventario.html', {'inventario': inventario})
+
+
 # Inventario
-""" def index_inventario(request):
-    inventario = Inventario.objects.all()
-    return render(request, 'index_inventario.html', {'inventario': inventario})
- """
- 
+
 def ver_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     return render(request, 'ver_inventario.html', {'inventario': inventario})
@@ -85,45 +83,6 @@ def eliminar_inventario(request, id):
     return render(request, 'eliminar_inventario.html', {'inventario': inventario})
 
 
-# Users
-
-""" def index_users(request):
-    users = Users.objects.all()
-    return render(request, 'index_users.html', {'users': users})
-
-def ver_users(request, id):
-    users = Users.objects.get(id=id)
-    return render(request, 'ver_users.html', {'users': users})
-
-def crear_users(request):
-    if request.method == 'POST':
-        form = UsersForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(index_users)
-    else:
-        form = UsersForm()
-    return render(request, 'crear_users.html', {'form': form})
-
-def editar_users(request, id):
-    users = Users.objects.get(id=id)
-    if request.method == 'POST':
-        form = UsersForm(request.POST, instance=users)
-        if form.is_valid():
-            form.save()
-            return redirect(index_users)
-    else:   
-        form = UsersForm(instance=users)
-    return render(request, 'editar_users.html', {'form': form})
-
-def eliminar_users(request, id):
-    users = Users.objects.get(id=id)
-    if request.method == 'POST' or request.method == 'DELETE':
-        users.delete()
-        return redirect(index_users)
-    return render(request, 'eliminar_users.html', {'users': users})
-
- """
 # tipoObjeto	
 
 def index_tipoObjeto(request):
