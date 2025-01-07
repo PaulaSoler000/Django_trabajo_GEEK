@@ -15,7 +15,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 class InventarioForm(forms.ModelForm):
     class Meta:
         model = Inventario
-        fields = ['nombre_objeto', 'id_tipoobjeto', 'estado', 'curso', 'fecha_salida', 'descripcion', 'edicion', 'editorial', 'volumen', 'autor', 'precio', 'genero', 'altura', 'marca', 'plataforma', 'compania', 'cantidad', 'tags']
+        fields = ['nombre_objeto', 'tipo_objeto', 'estado', 'curso', 'fecha_salida', 'descripcion', 'edicion', 'editorial', 'volumen', 'autor', 'precio', 'genero', 'altura', 'marca', 'plataforma', 'compania', 'cantidad', 'tags']
   
         
 class TipoObjetoForm(forms.ModelForm):

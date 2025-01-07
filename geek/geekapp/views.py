@@ -43,7 +43,7 @@ def logout_view(request):
 
 @login_required
 def index_inventario(request):
-    inventario = Inventario.objects.filter(id_usuario=request.user)
+    inventario = Inventario.objects.filter(usuario=request.user)
     return render(request, 'index_inventario.html', {'inventario': inventario})
 
 

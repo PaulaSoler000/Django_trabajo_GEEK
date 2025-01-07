@@ -7,6 +7,18 @@
 </head>
 <body>
     <h1>Inventario</h1>
+
+    <a href="{% url 'crear_inventario' %}">Crear Inventario</a>
+
+    <ul>
+        {% for inventario in inventario %} 
+            <li>
+                <a href="{% url 'ver_inventario' inventario.id %}">{{ inventario.nombre_objeto }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+
     
 </body>
 </html>
