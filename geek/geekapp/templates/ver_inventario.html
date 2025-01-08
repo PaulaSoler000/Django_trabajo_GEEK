@@ -9,6 +9,9 @@
 
     <h1>Ver Inventario</h1>
 
+    <a href="{% url 'editar_inventario' inventario.id %}">Editar</a>
+    <a href="{% url 'inventario' %}"><input type="submit" value="Volver"></a>
+
     <p>Nombre Objeto: {{ inventario.nombre_objeto }}</p>
     <p>Tipo Objeto: {{ inventario.tipo_objeto }}</p>
     <p>Estado: {{ inventario.estado }}</p>

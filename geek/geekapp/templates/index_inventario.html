@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Inventario</h1>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <a href="{% url 'logout' %}">Cerrar sesión</a>
 
-    <a href="{% url 'crear_inventario' %}">Crear Inventario</a>
-
-    <ul>
-        {% for inventario in inventario %} 
+        <h1>Inventario</h1>
+        <a href="{% url 'crear_inventario' %}">Crear Inventario</a>
+        <ul>
+            {% for inventario in inventario %}
             <li>
-                <a href="{% url 'ver_inventario' inventario.id %}">{{ inventario.nombre_objeto }}</a>
+                <a href="{% url 'ver_inventario' inventario.id %}">{{ inventario.nombre_objeto }}</a> <a href="{% url 'editar_inventario' inventario.id %}">Editar</a>
+                <form action="{% url 'eliminar_inventario' inventario.id %}" method="POST">{% csrf_token %}
+                    <input type="submit" value="Eliminar">
+                </form>
             </li>
-        {% endfor %}
-    </ul>
-    
-
-    
-</body>
+            {% endfor %}
+        </ul>
+    </body>
 </html>

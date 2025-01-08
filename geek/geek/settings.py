@@ -52,6 +52,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+LOGIN_URL = '/'  # Asumiendo que tu vista de login está en la raíz
+
+
 ROOT_URLCONF = 'geek.urls'
 
 TEMPLATES = [

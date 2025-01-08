@@ -38,7 +38,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.info(request, "Has cerrado sesión exitosamente.")
-    return redirect('login')
+    return redirect(login_view)
 
 
 @login_required
