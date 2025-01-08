@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Inventario, CustomUser, TipoObjeto
-from .forms import InventarioForm, TipoObjetoForm, CustomUserCreationForm, CustomAuthenticationForm
+from .models import Inventario, CustomUser
+from .forms import InventarioForm, CustomUserCreationForm, CustomAuthenticationForm
 
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
@@ -53,7 +53,7 @@ def ver_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     return render(request, 'ver_inventario.html', {'inventario': inventario})
 
-@login_required
+""" @login_required
 def crear_inventario(request):
     if request.method == 'POST':
         form = InventarioForm(request.POST)
@@ -62,7 +62,21 @@ def crear_inventario(request):
             return redirect(index_inventario)
     else:
         form = InventarioForm()
+    return render(request, 'crear_inventario.html', {'form': form}) """
+
+@login_required
+def crear_inventario(request):
+    if request.method == 'POST':
+        form = InventarioForm(request.POST)
+        if form.is_valid():
+            inventario = form.save(commit=False)
+            inventario.usuario = request.user
+            inventario.save()
+            return redirect(index_inventario)
+    else:
+        form = InventarioForm()
     return render(request, 'crear_inventario.html', {'form': form})
+
 
 def editar_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
@@ -85,7 +99,7 @@ def eliminar_inventario(request, id):
 
 # tipoObjeto	
 
-def index_tipoObjeto(request):
+""" def index_tipoObjeto(request):
     tipoObjeto = TipoObjeto.objects.all()
     return render(request, 'index_tipoObjeto.html', {'tipoObjeto': tipoObjeto})
 
@@ -119,6 +133,6 @@ def eliminar_tipoObjeto(request, id):
     if request.method == 'POST' or request.method == 'DELETE':
         tipoObjeto.delete()
         return redirect(index_tipoObjeto)
-    return render(request, 'eliminar_tipoObjeto.html', {'tipoObjeto': tipoObjeto})
+    return render(request, 'eliminar_tipoObjeto.html', {'tipoObjeto': tipoObjeto}) """
 
 

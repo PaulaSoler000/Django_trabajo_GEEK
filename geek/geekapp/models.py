@@ -7,11 +7,11 @@ class CustomUser(AbstractUser):
     # Agrega campos adicionales si los necesitas
     pass
 
-class TipoObjeto(models.Model):
+""" class TipoObjeto(models.Model):
     tipo_objeto = models.CharField(max_length=100)
     
     def __str__(self):
-        return self.tipo_objeto
+        return self.tipo_objeto """
 
 
 class Inventario(models.Model):

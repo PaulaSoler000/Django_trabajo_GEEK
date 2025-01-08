@@ -1,5 +1,5 @@
 from django import forms
-from .models import Inventario, TipoObjeto
+from .models import Inventario
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
 
@@ -18,8 +18,8 @@ class InventarioForm(forms.ModelForm):
         fields = ['nombre_objeto', 'tipo_objeto', 'estado', 'curso', 'fecha_salida', 'descripcion', 'edicion', 'editorial', 'volumen', 'autor', 'precio', 'genero', 'altura', 'marca', 'plataforma', 'compania', 'cantidad', 'tags']
   
         
-class TipoObjetoForm(forms.ModelForm):
+""" class TipoObjetoForm(forms.ModelForm):
     class Meta:
         model = TipoObjeto
-        fields = ['tipo_objeto']
+        fields = ['tipo_objeto'] """
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import login_view, index_inventario, register_view, crear_inventario
+from .views import login_view, index_inventario, register_view, crear_inventario, ver_inventario
 
 urlpatterns = [
     
@@ -8,4 +8,5 @@ urlpatterns = [
     path('register/', register_view, name='register_view'),
     path('inventario/', index_inventario, name='inventario'),
     path('crear_inventario/', crear_inventario, name='crear_inventario'),
+    path('ver_inventario/<int:id>', ver_inventario, name='ver_inventario'),
 ]
