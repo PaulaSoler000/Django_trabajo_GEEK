@@ -77,3 +77,10 @@ class Inventario(models.Model):
     def __str__(self):
         return self.nombre_objeto
 
+
+class AlbumImage(models.Model):
+    album = models.ForeignKey(Inventario, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='albums/images/')
+
+    def __unicode__(self,):
+        return str(self.image)

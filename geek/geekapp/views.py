@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
-from .models import Inventario, CustomUser
-from .forms import InventarioForm, CustomUserCreationForm, CustomAuthenticationForm
+from .models import Inventario, CustomUser, AlbumImage
+from .forms import InventarioForm, CustomUserCreationForm, CustomAuthenticationForm, UploadImageForm
+from django.shortcuts import render
 
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.forms import formset_factory
 
 def register_view(request):
     if request.method == 'POST':
@@ -49,10 +51,16 @@ def index_inventario(request):
 
 # Inventario
 
-def ver_inventario(request, id):
+""" def ver_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     return render(request, 'ver_inventario.html', {'inventario': inventario})
+ """
+def ver_inventario(request, id):
+    inventario = Inventario.objects.get(id=id)
+    imagenes = AlbumImage.objects.filter(album=inventario)
+    return render(request, 'ver_inventario.html', {'inventario': inventario, 'imagenes': imagenes})
 
+ 
 """ @login_required
 def crear_inventario(request):
     if request.method == 'POST':
@@ -63,7 +71,7 @@ def crear_inventario(request):
     else:
         form = InventarioForm()
     return render(request, 'crear_inventario.html', {'form': form}) """
-
+""" 
 @login_required
 def crear_inventario(request):
     if request.method == 'POST':
@@ -76,6 +84,48 @@ def crear_inventario(request):
     else:
         form = InventarioForm()
     return render(request, 'crear_inventario.html', {'form': form})
+ """
+
+def crear_inventario(request):
+    ImageFormSet = formset_factory(UploadImageForm, extra=3)  # Permite subir hasta 3 imágenes
+
+    if request.method == 'POST':
+        inventario_form = InventarioForm(request.POST)
+        image_formset = ImageFormSet(request.POST, request.FILES)
+
+        if inventario_form.is_valid() and image_formset.is_valid():
+            inventario = inventario_form.save(commit=False)
+            inventario.usuario = request.user  # Asigna el usuario actual
+            inventario.save()
+
+            for image_form in image_formset:
+                if image_form.cleaned_data:
+                    image = image_form.save(commit=False)
+                    image.album = inventario
+                    image.save()
+
+            return redirect('inventario')
+    else:
+        inventario_form = InventarioForm()
+        image_formset = ImageFormSet()
+    
+    return render(request, 'crear_inventario.html', {
+        'inventario_form': inventario_form,
+        'image_formset': image_formset
+    })
+
+""" @login_required
+def upload_image_view(request):
+    if request.method == 'POST':
+        form = UploadImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            message = "Image uploaded succesfully!"
+    else:
+        form = UploadImageForm()
+
+    return render('albums/upload.html', locals(), context_instance=RequestContext(request))
+ """
 
 
 def editar_inventario(request, id):

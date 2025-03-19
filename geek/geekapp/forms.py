@@ -1,5 +1,5 @@
 from django import forms
-from .models import Inventario
+from .models import Inventario, AlbumImage
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
 
@@ -17,6 +17,12 @@ class InventarioForm(forms.ModelForm):
         model = Inventario
         fields = ['nombre_objeto', 'tipo_objeto', 'estado', 'curso', 'fecha_salida', 'descripcion', 'edicion', 'editorial', 'volumen', 'autor', 'precio', 'genero', 'altura', 'marca', 'plataforma', 'compania', 'cantidad', 'tags']
   
+
+class UploadImageForm(forms.ModelForm):
+
+    class Meta:
+        model = AlbumImage
+        fields = ['image']
         
 """ class TipoObjetoForm(forms.ModelForm):
     class Meta:
