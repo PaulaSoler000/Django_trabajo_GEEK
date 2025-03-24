@@ -7,11 +7,34 @@
 </head>
 <body>
     <h1>Editar Inventario</h1>
-    <form method="POST">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        
         {{ form.as_p }}
-        <button type="submit">Editar</button>
+    
+        <h3>Imágenes</h3>
+        {{ image_formset.management_form }}
+        
+        {% for image_form in image_formset %}
+            <div>
+                {% if image_form.instance.image %}
+                    <img src="{{ image_form.instance.image.url }}" width="100" alt="Imagen actual">
+                {% endif %}
+                {{ image_form.as_p }}
+            </div>
+        {% endfor %}
+    
+        <!-- Renderizar formularios vacíos si es necesario -->
+        {% for _ in empty_forms_needed %}
+            <div>
+                <label>Subir nueva imagen:</label>
+                <input type="file" name="image">
+            </div>
+        {% endfor %}
+        
+        <button type="submit">Guardar cambios</button>
     </form>
+    
     <a href="{% url 'inventario' %}"><input type="submit" value="Volver"></a>
     
 </body>

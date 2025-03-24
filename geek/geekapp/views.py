@@ -5,9 +5,9 @@ from django.shortcuts import render
 
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.forms import formset_factory
+from django.forms import formset_factory, modelformset_factory
 
 def register_view(request):
     if request.method == 'POST':
@@ -87,7 +87,7 @@ def crear_inventario(request):
  """
 
 def crear_inventario(request):
-    ImageFormSet = formset_factory(UploadImageForm, extra=3)  # Permite subir hasta 3 imágenes
+    ImageFormSet = formset_factory(UploadImageForm, extra=4)  # Permite subir hasta 3 imágenes
 
     if request.method == 'POST':
         inventario_form = InventarioForm(request.POST)
@@ -127,8 +127,81 @@ def upload_image_view(request):
     return render('albums/upload.html', locals(), context_instance=RequestContext(request))
  """
 
+""" def editar_inventario(request, id):
+    inventario = get_object_or_404(Inventario, id=id)
+    
+    # Creamos un formset con exactamente 4 formularios (uno por cada imagen que queremos mostrar siempre)
+    ImageFormSet = modelformset_factory(AlbumImage, form=UploadImageForm, extra=0, max_num=4)
+    
+    # Obtenemos las imágenes existentes del inventario
+    existing_images = inventario.images.all()
+    
+    # Si hay menos de 4 imágenes, agregamos formularios vacíos hasta completar los 4
+    empty_forms_needed = 4 - existing_images.count()
+    
+    if request.method == 'POST':
+        form = InventarioForm(request.POST, instance=inventario)
+        image_formset = ImageFormSet(request.POST, request.FILES, queryset=existing_images)
+        
+        if form.is_valid() and image_formset.is_valid():
+            form.save()
+            
+            # Guardar imágenes nuevas reemplazando las antiguas
+            for form in image_formset:
+                if form.cleaned_data.get('image'):  # Solo guardar si hay imagen
+                    image = form.save(commit=False)
+                    image.album = inventario
+                    image.save()
+                    
+            return redirect('inventario')
+    else:
+        form = InventarioForm(instance=inventario)
+        image_formset = ImageFormSet(queryset=existing_images)
 
+    return render(request, 'editar_inventario.html', {
+        'form': form,
+        'image_formset': image_formset,
+        'empty_forms_needed': range(empty_forms_needed)  # Para renderizar formularios vacíos en la plantilla
+    })
+     """
+     
+     
 def editar_inventario(request, id):
+    inventario = get_object_or_404(Inventario, id=id)
+
+    # Permitir hasta 4 imágenes en total (existentes + nuevas)
+    ImageFormSet = modelformset_factory(AlbumImage, form=UploadImageForm, extra=4, max_num=4, can_delete=True)
+
+    existing_images = inventario.images.all()
+    
+    if request.method == 'POST':
+        form = InventarioForm(request.POST, instance=inventario)
+        image_formset = ImageFormSet(request.POST, request.FILES, queryset=existing_images)
+
+        if form.is_valid() and image_formset.is_valid():
+            form.save()
+            
+            for image_form in image_formset:
+                if image_form.cleaned_data.get('image'):  # Solo guardar si hay imagen
+                    image = image_form.save(commit=False)
+                    image.album = inventario  # Asociar la imagen con el inventario
+                    image.save()
+                
+                if image_form.cleaned_data.get('DELETE'):  # Eliminar imagen si el usuario lo indica
+                    image_form.instance.delete()
+            
+            return redirect('inventario')
+    
+    else:
+        form = InventarioForm(instance=inventario)
+        image_formset = ImageFormSet(queryset=existing_images)
+
+    return render(request, 'editar_inventario.html', {
+        'form': form,
+        'image_formset': image_formset
+    })
+    
+""" def editar_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     if request.method == 'POST':
         form = InventarioForm(request.POST, instance=inventario)
@@ -138,7 +211,11 @@ def editar_inventario(request, id):
     else:
         form = InventarioForm(instance=inventario)
     return render(request, 'editar_inventario.html', {'form': form})
-
+ """
+ 
+ 
+ 
+ 
 def eliminar_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     if request.method == 'POST' or request.method == 'DELETE':
