@@ -2,6 +2,12 @@ from django.shortcuts import render
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from taggit.managers import TaggableManager
+
+class Inventario(models.Model):
+    # Tu código actual...
+    tags = TaggableManager()  # Reemplaza el campo CharField
+
 
 class CustomUser(AbstractUser):
     # Agrega campos adicionales si los necesitas
@@ -29,10 +35,10 @@ class Inventario(models.Model):
     
     TIPO_CHOICES = [
         ('libro', 'Libro'),
-        ('revista', 'Revista'),
-        ('cancion', 'Cancion'),
-        ('pelicula', 'Pelicula'),
-        ('musica', 'Musica'),
+        ('manga', 'Manga'),
+        ('comic', 'Cómic'),
+        ('figura', 'Figura'),
+        ('consola', 'Consola'),
         ('otro', 'Otro'),
     ]
 
@@ -55,9 +61,9 @@ class Inventario(models.Model):
     )
     
     fecha_salida = models.DateField(null=True, blank=True)
-    tags = models.CharField(max_length=100, null=True, blank=True)
+    #tags = models.CharField(max_length=100, null=True, blank=True)
+    tags = TaggableManager()
     descripcion = models.TextField(null=True, blank=True)
-    foto = models.CharField(max_length=200, null=True, blank=True)
     edicion = models.CharField(max_length=100, null=True, blank=True)
     editorial = models.CharField(max_length=100, null=True, blank=True)
     volumen = models.IntegerField(null=True, blank=True)

@@ -8,17 +8,84 @@
     <body>
         <a href="{% url 'logout' %}">Cerrar sesión</a>
 
+        <form id="searchForm">
+            <input type="text" id="searchInput" placeholder="Buscar por nombre de objeto">
+            <button type="submit">Buscar</button>
+        </form>
+
         <h1>Inventario</h1>
         <a href="{% url 'crear_inventario' %}">Crear Inventario</a>
-        <ul>
-            {% for inventario in inventario %}
-            <li>
-                <a href="{% url 'ver_inventario' inventario.id %}">{{ inventario.nombre_objeto }}</a> <a href="{% url 'editar_inventario' inventario.id %}">Editar</a>
-                <form action="{% url 'eliminar_inventario' inventario.id %}" method="POST">{% csrf_token %}
-                    <input type="submit" value="Eliminar">
-                </form>
-            </li>
+
+        <!-- Filtros -->
+        <form method="GET">
+            <label for="tipo_objeto">Filtrar por tipo de objeto:</label>
+            <select name="tipo_objeto">
+                <option value="">Todos</option>
+                {% for tipo, label in TIPO_CHOICES %}
+                    <option value="{{ tipo }}" {% if tipo == tipo_objeto_filtro %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="tag">Filtrar por tag:</label>
+            <select name="tag">
+                <option value="">Todos los tags</option>
+                {% for tag in tags_disponibles %}
+                    <option value="{{ tag.name }}" {% if tag.name == tag_filtro %}selected{% endif %}>{{ tag.name }}</option>
+                {% endfor %}
+            </select>
+        
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <!-- Aquí se mostrarán los resultados de la búsqueda -->
+        <h2>Inventario</h2>
+        <ul id="inventarioList">
+            {% for item in inventario %}
+                <li>
+                    <a href="{% url 'ver_inventario' item.id %}">{{ item.nombre_objeto }}</a>
+                    <a href="{% url 'editar_inventario' item.id %}">Editar</a>
+                    <form action="{% url 'eliminar_inventario' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Eliminar">
+                    </form>
+                </li>
             {% endfor %}
         </ul>
+
+        <!-- Script para la búsqueda dinámica -->
+        <script>
+            const searchForm = document.getElementById('searchForm');
+            const searchInput = document.getElementById('searchInput');
+            const inventarioList = document.getElementById('inventarioList');
+
+            // Al enviar el formulario de búsqueda
+            searchForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const query = searchInput.value;  // Obtener el término de búsqueda
+
+                fetch(`/buscar_inventario/?search=${query}`)  // Llamar al endpoint de búsqueda
+                    .then(response => response.json())  // Convertir respuesta a JSON
+                    .then(data => {
+                        inventarioList.innerHTML = '';  // Limpiar la lista actual
+
+                        // Crear los nuevos elementos de la lista
+                        data.inventario.forEach(item => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                                <a href="/ver_inventario/${item.id}">${item.nombre_objeto}</a>
+                                <a href="/editar_inventario/${item.id}">Editar</a>
+                                <form action="/eliminar_inventario/${item.id}" method="POST">
+                                    <input type="submit" value="Eliminar">
+                                </form>
+                            `;
+                            inventarioList.appendChild(li);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        </script>
     </body>
 </html>

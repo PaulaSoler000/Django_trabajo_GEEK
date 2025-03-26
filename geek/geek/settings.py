@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'geekapp'
+    'geekapp',
+    'taggit'
 ]
 
 AUTH_USER_MODEL = 'geekapp.CustomUser'

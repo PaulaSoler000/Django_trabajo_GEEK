@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Inventario, CustomUser, AlbumImage
 from .forms import InventarioForm, CustomUserCreationForm, CustomAuthenticationForm, UploadImageForm
 from django.shortcuts import render
+from taggit.models import Tag
+from django.http import JsonResponse
 
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
@@ -43,10 +45,62 @@ def logout_view(request):
     return redirect(login_view)
 
 
-@login_required
+""" @login_required
 def index_inventario(request):
     inventario = Inventario.objects.filter(usuario=request.user)
     return render(request, 'index_inventario.html', {'inventario': inventario})
+ """
+ 
+""" @login_required
+def index_inventario(request):
+    tipo_objeto_filtro = request.GET.get('tipo_objeto', '')  # Obtiene el filtro desde la URL
+    inventario = Inventario.objects.filter(usuario=request.user)
+
+    if tipo_objeto_filtro:
+        inventario = inventario.filter(tipo_objeto=tipo_objeto_filtro)
+
+    return render(request, 'index_inventario.html', {
+        'inventario': inventario,
+        'tipo_objeto_filtro': tipo_objeto_filtro,
+        'TIPO_CHOICES': Inventario.TIPO_CHOICES,  # Para generar las opciones en la plantilla
+    }) """
+
+def buscar_inventario(request):
+    search_query = request.GET.get('search', '')  # Obtener el término de búsqueda desde la URL
+    inventario = Inventario.objects.filter(usuario=request.user)  # Filtrar por usuario actual
+
+    if search_query:
+        inventario = inventario.filter(nombre_objeto__icontains=search_query)  # Filtrar por nombre_objeto
+
+    inventario_data = list(inventario.values('id', 'nombre_objeto', 'tipo_objeto', 'estado'))  # Solo los campos necesarios
+
+    return JsonResponse({'inventario': inventario_data})
+
+
+@login_required
+def index_inventario(request):
+    tipo_objeto_filtro = request.GET.get('tipo_objeto', '')  # Obtiene el filtro de tipo de objeto
+    tag_filtro = request.GET.get('tag', '')  # Obtiene el filtro de tag
+    inventario = Inventario.objects.filter(usuario=request.user)
+
+    # Filtrar por tipo de objeto
+    if tipo_objeto_filtro:
+        inventario = inventario.filter(tipo_objeto=tipo_objeto_filtro)
+
+    # Filtrar por tag
+    if tag_filtro:
+        inventario = inventario.filter(tags__name=tag_filtro)  # Filtra por el nombre del tag
+
+    # Obtener todos los tags disponibles para mostrarlos en el formulario
+    tags_disponibles = Tag.objects.all()
+
+    return render(request, 'index_inventario.html', {
+        'inventario': inventario,
+        'tipo_objeto_filtro': tipo_objeto_filtro,
+        'tag_filtro': tag_filtro,
+        'TIPO_CHOICES': Inventario.TIPO_CHOICES,  # Para generar las opciones en la plantilla
+        'tags_disponibles': tags_disponibles,  # Pasa los tags disponibles al template
+    })
 
 
 # Inventario

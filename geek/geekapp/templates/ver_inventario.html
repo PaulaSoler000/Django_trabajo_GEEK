@@ -28,7 +28,7 @@
         <p>Plataforma: {{ inventario.plataforma }}</p>
         <p>Compania: {{ inventario.compania }}</p>
         <p>Cantidad: {{ inventario.cantidad }}</p>
-        <p>Tags: {{ inventario.tags }}</p>
+        <p>Tags: {% for tag in inventario.tags.all %} {{ tag }}, {% endfor %}</p>
         {% if imagenes %}
     {% for imagen in imagenes %}
         <img src="{{ imagen.image.url }}" alt="Imagen del inventario" style="max-width: 300px; margin: 10px;">
