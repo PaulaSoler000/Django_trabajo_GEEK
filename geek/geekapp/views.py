@@ -77,7 +77,7 @@ def buscar_inventario(request):
     return JsonResponse({'inventario': inventario_data})
 
 
-@login_required
+""" @login_required
 def index_inventario(request):
     tipo_objeto_filtro = request.GET.get('tipo_objeto', '')  # Obtiene el filtro de tipo de objeto
     tag_filtro = request.GET.get('tag', '')  # Obtiene el filtro de tag
@@ -100,7 +100,46 @@ def index_inventario(request):
         'tag_filtro': tag_filtro,
         'TIPO_CHOICES': Inventario.TIPO_CHOICES,  # Para generar las opciones en la plantilla
         'tags_disponibles': tags_disponibles,  # Pasa los tags disponibles al template
+    }) """
+
+@login_required
+def index_inventario(request):
+    tipo_objeto_filtro = request.GET.get('tipo_objeto', '')  # Filtrar por tipo de objeto
+    tag_filtro = request.GET.get('tag', '')  # Filtrar por tag
+    estado_filtro = request.GET.get('estado', '')  # Filtrar por estado
+    precio_orden = request.GET.get('precio_orden', '')  # Ordenar por precio
+
+    inventario = Inventario.objects.filter(usuario=request.user)
+
+    # Aplicar filtros
+    if tipo_objeto_filtro:
+        inventario = inventario.filter(tipo_objeto=tipo_objeto_filtro)
+    
+    if tag_filtro:
+        inventario = inventario.filter(tags__name=tag_filtro)
+    
+    if estado_filtro:
+        inventario = inventario.filter(estado=estado_filtro)
+
+    # Ordenar por precio
+    if precio_orden == 'asc':
+        inventario = inventario.order_by('precio')
+    elif precio_orden == 'desc':
+        inventario = inventario.order_by('-precio')
+
+    tags_disponibles = Tag.objects.all()
+
+    return render(request, 'index_inventario.html', {
+        'inventario': inventario,
+        'tipo_objeto_filtro': tipo_objeto_filtro,
+        'tag_filtro': tag_filtro,
+        'estado_filtro': estado_filtro,
+        'precio_orden': precio_orden,
+        'TIPO_CHOICES': Inventario.TIPO_CHOICES,
+        'tags_disponibles': tags_disponibles,
+        'ESTADO_CHOICES': Inventario.ESTADO_CHOICES,  # Para el filtro de estado
     })
+
 
 
 # Inventario
@@ -141,7 +180,7 @@ def crear_inventario(request):
  """
 
 def crear_inventario(request):
-    ImageFormSet = formset_factory(UploadImageForm, extra=4)  # Permite subir hasta 3 imágenes
+    ImageFormSet = formset_factory(UploadImageForm, extra=4)  # Permite subir hasta 4 imágenes
 
     if request.method == 'POST':
         inventario_form = InventarioForm(request.POST)
@@ -149,11 +188,15 @@ def crear_inventario(request):
 
         if inventario_form.is_valid() and image_formset.is_valid():
             inventario = inventario_form.save(commit=False)
-            inventario.usuario = request.user  # Asigna el usuario actual
+            inventario.usuario = request.user
             inventario.save()
-
+            
+            # ¡IMPORTANTE! Guardar los tags después de guardar el objeto principal
+            inventario_form.save_m2m()  # Esto guarda las relaciones many-to-many (como los tags)
+            
+            # Guardar las imágenes
             for image_form in image_formset:
-                if image_form.cleaned_data:
+                if image_form.cleaned_data.get('image'):
                     image = image_form.save(commit=False)
                     image.album = inventario
                     image.save()
@@ -270,13 +313,29 @@ def editar_inventario(request, id):
  
  
  
-def eliminar_inventario(request, id):
+""" def eliminar_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     if request.method == 'POST' or request.method == 'DELETE':
         inventario.delete()
         return redirect(index_inventario)
     return render(request, 'eliminar_inventario.html', {'inventario': inventario})
+ """
 
+def eliminar_inventario(request, id):
+    inventario = Inventario.objects.get(id=id)
+    if request.method == 'POST' or request.method == 'DELETE':
+        # Guardamos los tags asociados antes de eliminar
+        tags_asociados = list(inventario.tags.all())
+        
+        inventario.delete()
+        
+        # Verificamos si los tags quedaron sin uso
+        for tag in tags_asociados:
+            if tag.taggit_taggeditem_items.count() == 0:
+                tag.delete()
+                
+        return redirect(index_inventario)
+    return render(request, 'eliminar_inventario.html', {'inventario': inventario})
 
 # tipoObjeto	
 

@@ -39,30 +39,29 @@ class Inventario(models.Model):
         ('comic', 'Cómic'),
         ('figura', 'Figura'),
         ('consola', 'Consola'),
+        ('videojuego', 'Videojuego'),
         ('otro', 'Otro'),
     ]
 
     nombre_objeto = models.CharField(max_length=100)
     estado = models.CharField(
         max_length=12,
-        choices=ESTADO_CHOICES,
-        default='nuevo'
+        choices=ESTADO_CHOICES
     )
     curso = models.CharField(
         max_length=12,
-        choices=CURSO_CHOICES,
-        default='sin_empezar'
+        choices=CURSO_CHOICES, 
+        blank=True
     )
     
     tipo_objeto =models.CharField(
         max_length=12,
-        choices=TIPO_CHOICES,
-        default='libro'
+        choices=TIPO_CHOICES
     )
     
     fecha_salida = models.DateField(null=True, blank=True)
     #tags = models.CharField(max_length=100, null=True, blank=True)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
     descripcion = models.TextField(null=True, blank=True)
     edicion = models.CharField(max_length=100, null=True, blank=True)
     editorial = models.CharField(max_length=100, null=True, blank=True)
