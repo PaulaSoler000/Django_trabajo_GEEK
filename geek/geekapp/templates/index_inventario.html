@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <a href="{% url 'logout' %}">Cerrar sesión</a>
+{% extends "base.html" %}
 
-        <form id="searchForm">
-            <input type="text" id="searchInput" placeholder="Buscar por nombre de objeto">
-            <button type="submit">Buscar</button>
-        </form>
+{% block title %}Inicio{% endblock %}
 
-        <h1>Inventario</h1>
-        <a href="{% url 'crear_inventario' %}">Crear Inventario</a>
+{% block content %}
+        
 
         <!-- Filtros -->
         <form method="GET">
@@ -55,6 +44,7 @@
 
         <!-- Aquí se mostrarán los resultados de la búsqueda -->
         <h2>Inventario</h2>
+        <a href="{% url 'crear_inventario' %}">Crear Inventario</a>
         <ul id="inventarioList">
             {% for item in inventario %}
                 <li>
@@ -67,41 +57,4 @@
                 </li>
             {% endfor %}
         </ul>
-
-        <!-- Script para la búsqueda dinámica -->
-        <script>
-            const searchForm = document.getElementById('searchForm');
-            const searchInput = document.getElementById('searchInput');
-            const inventarioList = document.getElementById('inventarioList');
-
-            // Al enviar el formulario de búsqueda
-            searchForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                const query = searchInput.value;  // Obtener el término de búsqueda
-
-                fetch(`/buscar_inventario/?search=${query}`)  // Llamar al endpoint de búsqueda
-                    .then(response => response.json())  // Convertir respuesta a JSON
-                    .then(data => {
-                        inventarioList.innerHTML = '';  // Limpiar la lista actual
-
-                        // Crear los nuevos elementos de la lista
-                        data.inventario.forEach(item => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `
-                                <a href="/ver_inventario/${item.id}">${item.nombre_objeto}</a>
-                                <a href="/editar_inventario/${item.id}">Editar</a>
-                                <form action="/eliminar_inventario/${item.id}" method="POST">
-                                    <input type="submit" value="Eliminar">
-                                </form>
-                            `;
-                            inventarioList.appendChild(li);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
-        </script>
-    </body>
-</html>
+{% endblock %}

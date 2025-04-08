@@ -54,8 +54,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-LOGIN_URL = '/'  # Asumiendo que tu vista de login está en la raíz
+""" LOGIN_URL = '/'  # Asumiendo que tu vista de login está en la raíz """
 
+LOGIN_URL = '/accounts/login/'  # URL para iniciar sesión
+LOGIN_REDIRECT_URL = '/'        # URL después de iniciar sesión
 
 ROOT_URLCONF = 'geek.urls'
 
@@ -123,7 +125,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+# Directorios adicionales donde buscar archivos estáticos
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Carpeta global 'static' en el directorio raíz
+]
+
+# Carpeta donde se recopilarán los archivos estáticos (cuando uses collectstatic)
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -66,16 +66,14 @@ def index_inventario(request):
     }) """
 
 def buscar_inventario(request):
-    search_query = request.GET.get('search', '')  # Obtener el término de búsqueda desde la URL
-    inventario = Inventario.objects.filter(usuario=request.user)  # Filtrar por usuario actual
+    query = request.GET.get('search', '')  # Capturar el término de búsqueda
+    if query:
+        inventario = Inventario.objects.filter(nombre_objeto__icontains=query)  # Filtrar por nombre
+    else:
+        inventario = Inventario.objects.all()  # Mostrar todo si no hay búsqueda
 
-    if search_query:
-        inventario = inventario.filter(nombre_objeto__icontains=search_query)  # Filtrar por nombre_objeto
-
-    inventario_data = list(inventario.values('id', 'nombre_objeto', 'tipo_objeto', 'estado'))  # Solo los campos necesarios
-
-    return JsonResponse({'inventario': inventario_data})
-
+    # Devolver los resultados en formato JSON
+    return JsonResponse({'inventario': list(inventario.values('id', 'nombre_objeto'))})
 
 """ @login_required
 def index_inventario(request):
@@ -104,14 +102,20 @@ def index_inventario(request):
 
 @login_required
 def index_inventario(request):
-    tipo_objeto_filtro = request.GET.get('tipo_objeto', '')  # Filtrar por tipo de objeto
-    tag_filtro = request.GET.get('tag', '')  # Filtrar por tag
-    estado_filtro = request.GET.get('estado', '')  # Filtrar por estado
-    precio_orden = request.GET.get('precio_orden', '')  # Ordenar por precio
+    # Capturar parámetros de búsqueda y filtros
+    query = request.GET.get('search', '')  # Nuevo parámetro de búsqueda
+    tipo_objeto_filtro = request.GET.get('tipo_objeto', '')
+    tag_filtro = request.GET.get('tag', '')
+    estado_filtro = request.GET.get('estado', '')
+    precio_orden = request.GET.get('precio_orden', '')
 
     inventario = Inventario.objects.filter(usuario=request.user)
 
-    # Aplicar filtros
+    # Aplicar búsqueda por nombre
+    if query:
+        inventario = inventario.filter(nombre_objeto__icontains=query)  # Filtra por nombre
+
+    # Resto de filtros (mantén tu lógica existente)
     if tipo_objeto_filtro:
         inventario = inventario.filter(tipo_objeto=tipo_objeto_filtro)
     
@@ -126,7 +130,6 @@ def index_inventario(request):
         inventario = inventario.order_by('precio')
     elif precio_orden == 'desc':
         inventario = inventario.order_by('-precio')
-
     tags_disponibles = Tag.objects.all()
 
     return render(request, 'index_inventario.html', {
