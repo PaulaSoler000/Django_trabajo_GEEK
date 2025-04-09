@@ -1,40 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <h1>Ver Inventario</h1>
-        <a href="{% url 'editar_inventario' inventario.id %}">Editar</a>
-        <a href="{% url 'inventario' %}">
-            <input type="submit" value="Volver">
-        </a>
-        <p>Nombre Objeto: {{ inventario.nombre_objeto }}</p>
-        <p>Tipo Objeto: {{ inventario.tipo_objeto }}</p>
-        <p>Estado: {{ inventario.estado }}</p>
-        <p>Curso: {{ inventario.curso }}</p>
-        <p>Fecha Salida: {{ inventario.fecha_salida }}</p>
-        <p>Descripcion: {{ inventario.descripcion }}</p>
-        <p>Edicion: {{ inventario.edicion }}</p>
-        <p>Editorial: {{ inventario.editorial }}</p>
-        <p>Volumen: {{ inventario.volumen }}</p>
-        <p>Autor: {{ inventario.autor }}</p>
-        <p>Precio: {{ inventario.precio }}</p>
-        <p>Genero: {{ inventario.genero }}</p>
-        <p>Altura: {{ inventario.altura }}</p>
-        <p>Marca: {{ inventario.marca }}</p>
-        <p>Plataforma: {{ inventario.plataforma }}</p>
-        <p>Compania: {{ inventario.compania }}</p>
-        <p>Cantidad: {{ inventario.cantidad }}</p>
-        <p>Tags: {% for tag in inventario.tags.all %} {{ tag }}, {% endfor %}</p>
-        {% if imagenes %}
+{% extends "base.html" %}
+{% block content %}
+<h1>Ver Inventario</h1>
+<a href="{% url 'editar_inventario' inventario.id %}">Editar</a>
+<a href="{% url 'inventario' %}">
+    <input type="submit" value="Volver">
+</a>
+<p>Nombre Objeto: {{ inventario.nombre_objeto }}</p>
+<p>Tipo Objeto: {{ inventario.tipo_objeto }}</p>
+<p>Estado: {{ inventario.estado }}</p>
+<p>Curso: {{ inventario.curso }}</p>
+<p>Fecha Salida: {{ inventario.fecha_salida }}</p>
+<p>Descripcion: {{ inventario.descripcion }}</p>
+<p>Edicion: {{ inventario.edicion }}</p>
+<p>Editorial: {{ inventario.editorial }}</p>
+<p>Volumen: {{ inventario.volumen }}</p>
+<p>Autor: {{ inventario.autor }}</p>
+<p>Precio: {{ inventario.precio }}</p>
+<p>Genero: {{ inventario.genero }}</p>
+<p>Altura: {{ inventario.altura }}</p>
+<p>Marca: {{ inventario.marca }}</p>
+<p>Plataforma: {{ inventario.plataforma }}</p>
+<p>Compania: {{ inventario.compania }}</p>
+<p>Cantidad: {{ inventario.cantidad }}</p>
+<p>Tags: {% for tag in inventario.tags.all %} {{ tag }}, {% endfor %}</p>
+{% if imagenes %}
     {% for imagen in imagenes %}
-        <img src="{{ imagen.image.url }}" alt="Imagen del inventario" style="max-width: 300px; margin: 10px;">
-        {% endfor %}
+<img src="{{ imagen.image.url }}" alt="Imagen del inventario" style="max-width: 300px; margin: 10px;">
+{% endfor %}
 {% else %}
-        <p>No hay imágenes disponibles para este inventario.</p>
-        {% endif %}
-    </body>
-</html>
+<p>No hay imágenes disponibles para este inventario.</p>
+{% endif %}
+{% endblock %}
