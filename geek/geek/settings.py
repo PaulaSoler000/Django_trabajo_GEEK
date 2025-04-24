@@ -127,9 +127,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # Directorios adicionales donde buscar archivos estáticos
-STATICFILES_DIRS = [
+""" STATICFILES_DIRS = [
     BASE_DIR / "static",  # Carpeta global 'static' en el directorio raíz
-]
+] """
 
 # Carpeta donde se recopilarán los archivos estáticos (cuando uses collectstatic)
 STATIC_ROOT = BASE_DIR / "staticfiles"

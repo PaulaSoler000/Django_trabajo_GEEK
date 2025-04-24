@@ -4,10 +4,6 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from taggit.managers import TaggableManager
 
-class Inventario(models.Model):
-    # Tu código actual...
-    tags = TaggableManager()  # Reemplaza el campo CharField
-
 
 class CustomUser(AbstractUser):
     # Agrega campos adicionales si los necesitas
