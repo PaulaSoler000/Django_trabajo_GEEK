@@ -1,0 +1,352 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito&family=Work+Sans&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    font-family: "Nunito", sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  main {
+    flex: 1 0 auto;
+  }
+
+/* HEADER */
+header {
+    width: 100%;
+    background: #0097b2;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  header nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.5rem 2rem;
+  }
+  
+  header nav ul {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  header nav ul li a {
+    color: white;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+    padding: 8px 12px;
+    border-radius: 5px;
+  }
+  
+  header nav ul li a:hover,
+  header nav ul li .active {
+    background: white;
+    color: #0097b2;
+  }
+  
+  header form#searchForm {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  header input#searchInput {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+  }
+  
+  header button[type="submit"] {
+    background: #fff;
+    color: #0097b2;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  
+  header button[type="submit"]:hover {
+    background: #0097b2;
+    color: #fff;
+    border: 1px solid #fff;
+  }
+  
+  /* --------- Filtros de inventario --------- */
+
+  .form-filtros {
+    background: #f6fafd;
+    margin: 1.2rem auto 1.5rem auto;
+    padding: 0.7rem 1.2rem 0.7rem 1.2rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0,151,178,0.03);
+    max-width: 1500px;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap; 
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.97rem;
+    gap: 1.3rem 0.7rem;
+  }
+  
+  .form-filtros label {
+    font-weight: 500;
+    color: #007586;
+    margin-right: 0.3rem;
+    font-size: 0.97rem;
+    white-space: nowrap;
+  }
+  
+  .form-filtros select,
+  .form-filtros input[type="text"] {
+    font-size: 0.97rem;
+    font-family: "Nunito", sans-serif;
+    padding: 0.25rem 0.7rem;
+    border-radius: 6px;
+    border: 1px solid #d6e9ed;
+    background: #fff;
+    min-width: 120px;
+    width: 170px;
+    box-shadow: none;
+    margin-right: 0.5rem;
+  }
+  
+  .form-filtros button {
+    background-color: #e0f3f7;
+    border: 1px solid #b2d7df;
+    color: #0097b2;
+    padding: 6px 18px;
+    font-size: 0.97rem;
+    border-radius: 7px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+    margin-left: 1.2rem;
+    white-space: nowrap;
+  }
+  
+  .form-filtros button:hover {
+    background: #0097b2;
+    color: #fff;
+    border: 1px solid #0097b2;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 900px) {
+    .form-filtros {
+      gap: 0.7rem 0.5rem;
+      padding: 0.7rem 0.5rem 0.2rem 0.5rem;
+    }
+    .form-filtros select,
+    .form-filtros input[type="text"] {
+      width: 120px;
+      min-width: 90px;
+      font-size: 0.95rem;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .form-filtros {
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: 0.7rem 0.2rem 0.2rem 0.2rem;
+      font-size: 0.95rem;
+      align-items: stretch;
+    }
+    .form-filtros label {
+      font-size: 0.95rem;
+    }
+    .form-filtros select,
+    .form-filtros input[type="text"] {
+      width: 100%;
+      min-width: 0;
+      font-size: 0.95rem;
+    }
+    .form-filtros button {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+  
+
+/* --------- Lista de inventario --------- */
+.inventario-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.8rem;
+    max-width: 1200px;
+    margin: 0 auto 4rem auto;
+    padding: 0;
+    list-style: none;
+    justify-content: center;
+  }
+  
+  .card-item {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 16px rgba(0,151,178,0.07);
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    position: relative;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .card-item:hover {
+    box-shadow: 0 6px 24px rgba(0,151,178,0.15);
+  }
+  
+  .card-image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
+    background: #f0f6f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  
+  .card-content h3 {
+    font-size: 1.25rem;
+    color: #0097b2;
+    margin: 0 0 0.6rem 0;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .card-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .card-tags .tag {
+    background: #b2d7df;
+    color: #004d59;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  
+  .card-actions {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-around;
+    padding-top: 0.8rem;
+    border-top: 1px solid #e3f0f3;
+  }
+  
+  .card-actions a,
+  .card-actions button.btn-delete {
+    background: #0097b2;
+    color: white;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .card-actions a:hover,
+  .card-actions button.btn-delete:hover {
+    background: #007186;
+  }
+  
+  .delete-form {
+    margin: 0;
+    padding: 0;
+  }
+  
+  @media (max-width: 900px) {
+    .inventario-cards {
+      justify-content: center;
+    }
+    .card-item {
+      width: 45%;
+    }
+  }
+  
+  @media (max-width: 500px) {
+    .card-item {
+      width: 100%;
+    }
+  }
+  
+
+
+  /* FOOTER */
+  footer {
+    flex-shrink: 0;
+    width: 100%;
+    background: #0097b2;
+    color: white;
+    text-align: center;
+    padding: 1.2rem 0 1rem 0;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    margin-top: auto;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.07);
+  }
+  
+  /* RESPONSIVE HEADER & FOOTER */
+  @media (max-width: 800px) {
+    header nav {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+    }
+    header nav ul {
+      gap: 1rem;
+    }
+    header form#searchForm {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  

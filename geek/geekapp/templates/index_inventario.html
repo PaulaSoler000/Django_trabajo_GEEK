@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Inicio{% endblock %}
 
@@ -6,7 +7,7 @@
         
 
         <!-- Filtros -->
-        <form method="GET">
+        <form method="GET" class="form-filtros">
             <label for="tipo_objeto">Filtrar por tipo de objeto:</label>
             <select name="tipo_objeto">
                 <option value="">Todos</option>
@@ -57,4 +58,39 @@
                 </li>
             {% endfor %}
         </ul>
+
+        <ul id="inventarioList" class="inventario-cards">
+            {% for item in inventario %}
+            <li class="card-item">
+                <div class="card-image">
+                    {% if item.images.first %}
+                        <img src="{{ item.images.first.image.url }}" alt="{{ item.nombre_objeto }}">
+                    {% else %}
+                        <img src="{% static 'img/default-image.png' %}" alt="Imagen por defecto">
+                    {% endif %}
+                </div>
+                <div class="card-content">
+                    <h3>{{ item.nombre_objeto }}</h3>
+                    <div class="card-tags">
+                        {% for tag in item.tags.all %}
+                            <span class="tag">{{ tag.name }}</span>
+                        {% empty %}
+                            <span class="tag">Sin tags</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="{% url 'ver_inventario' item.id %}" title="Información" class="btn-info">ℹ️</a>
+                    <a href="{% url 'editar_inventario' item.id %}" title="Editar" class="btn-edit">✏️</a>
+                    <form action="{% url 'eliminar_inventario' item.id %}" method="POST" class="delete-form" title="Eliminar">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-delete">🗑️</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        
+
+
 {% endblock %}
