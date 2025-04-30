@@ -44,9 +44,11 @@
         
 
         <!-- Aquí se mostrarán los resultados de la búsqueda -->
-        <h2>Inventario</h2>
-        <a href="{% url 'crear_inventario' %}">Crear Inventario</a>
-        <ul id="inventarioList">
+         <div class="titulo">
+            <h2>Inventario</h2>
+            <a href="{% url 'crear_inventario' %}">Crear Inventario</a>
+        </div>
+        <!-- <ul id="inventarioList">
             {% for item in inventario %}
                 <li>
                     <a href="{% url 'ver_inventario' item.id %}">{{ item.nombre_objeto }}</a>
@@ -57,7 +59,7 @@
                     </form>
                 </li>
             {% endfor %}
-        </ul>
+        </ul> -->
 
         <ul id="inventarioList" class="inventario-cards">
             {% for item in inventario %}
