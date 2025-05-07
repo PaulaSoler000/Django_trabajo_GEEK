@@ -56,6 +56,7 @@ class Inventario(models.Model):
     )
     
     fecha_salida = models.DateField(null=True, blank=True)
+    fecha_compra = models.DateField(null=True, blank=True)
     #tags = models.CharField(max_length=100, null=True, blank=True)
     tags = TaggableManager(blank=True)
     descripcion = models.TextField(null=True, blank=True)
@@ -70,8 +71,6 @@ class Inventario(models.Model):
     compania = models.CharField(max_length=100, null=True, blank=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     cantidad = models.IntegerField(null=True, blank=True)
-    
-
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
 

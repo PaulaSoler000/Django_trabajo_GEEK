@@ -266,7 +266,7 @@ def upload_image_view(request):
      """
      
      
-def editar_inventario(request, id):
+""" def editar_inventario(request, id):
     inventario = get_object_or_404(Inventario, id=id)
 
     # Permitir hasta 4 imágenes en total (existentes + nuevas)
@@ -299,6 +299,42 @@ def editar_inventario(request, id):
     return render(request, 'editar_inventario.html', {
         'form': form,
         'image_formset': image_formset
+    }) """
+
+def editar_inventario(request, id):
+    inventario = get_object_or_404(Inventario, id=id)
+    ImageFormSet = modelformset_factory(AlbumImage, form=UploadImageForm, extra=4, max_num=4, can_delete=True)
+    existing_images = inventario.images.all()
+
+    if request.method == 'POST':
+        form = InventarioForm(request.POST, instance=inventario)
+        image_formset = ImageFormSet(request.POST, request.FILES, queryset=existing_images)
+
+        if form.is_valid() and image_formset.is_valid():
+            inventario = form.save()
+            # Actualiza los tags (django-taggit)
+            inventario.tags.set(form.cleaned_data['tags'])
+
+            # Guardar imágenes nuevas y eliminar las marcadas para borrar
+            instances = image_formset.save(commit=False)
+            for instance in instances:
+                instance.album = inventario
+                instance.save()
+            for obj in image_formset.deleted_objects:
+                obj.delete()
+
+            # ELIMINAR TAGS HUÉRFANOS DESPUÉS DE EDITAR
+            Tag.objects.filter(taggit_taggeditem_items__isnull=True).delete()
+
+            return redirect('inventario')
+    else:
+        form = InventarioForm(instance=inventario)
+        image_formset = ImageFormSet(queryset=existing_images)
+
+    return render(request, 'editar_inventario.html', {
+        'form': form,
+        'image_formset': image_formset,
+        'inventario': inventario,
     })
     
 """ def editar_inventario(request, id):
