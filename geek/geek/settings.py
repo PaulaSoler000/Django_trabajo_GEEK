@@ -56,8 +56,9 @@ MIDDLEWARE = [
 
 """ LOGIN_URL = '/'  # Asumiendo que tu vista de login está en la raíz """
 
-LOGIN_URL = '/accounts/login/'  # URL para iniciar sesión
+LOGIN_URL = '/'  # URL para iniciar sesión
 LOGIN_REDIRECT_URL = '/'        # URL después de iniciar sesión
+LOGOUT_REDIRECT_URL = '/'
 
 ROOT_URLCONF = 'geek.urls'
 

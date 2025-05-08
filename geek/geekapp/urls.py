@@ -13,6 +13,5 @@ urlpatterns = [
     path('eliminar_inventario/<int:id>', eliminar_inventario, name='eliminar_inventario'),
     path('logout/', logout_view, name='logout'),
     path('buscar_inventario/', buscar_inventario, name='buscar_inventario'),
-
     
 ]

@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito&family=Work+Sans&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    font-family: "Nunito", sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #dff5f8;
+  }
+  
+  main {
+    flex: 1 0 auto;
+  }
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dff5f8;
+  }
+  
+  .auth-card {
+    background: #fff;
+    padding: 2.5rem 2.2rem 2rem 2.2rem;
+    border-radius: 18px;
+    box-shadow: 0 4px 32px rgba(0,151,178,0.08);
+    width: 100%;
+    max-width: 470px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .auth-card h1 {
+    text-align: center;
+    color: #0097b2;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  
+  .auth-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  
+  .auth-card input[type="text"],
+  .auth-card input[type="password"],
+  .auth-card input[type="email"] {
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #b2d7df;
+    background: #f6fafd;
+    font-size: 1rem;
+    color: #222;
+    outline: none;
+    transition: border 0.2s;
+  }
+  
+  .auth-card input[type="text"]:focus,
+  .auth-card input[type="password"]:focus,
+  .auth-card input[type="email"]:focus {
+    border: 1.5px solid #0097b2;
+  }
+  
+  .auth-card button[type="submit"] {
+    background: #0097b2;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+  }
+  
+  .auth-card button[type="submit"]:hover {
+    background: #007186;
+  }
+  
+  .auth-card a {
+    display: block;
+    text-align: center;
+    margin-top: 1.2rem;
+    color: #0097b2;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+  
+  .auth-card a:hover {
+    color: #004d59;
+    text-decoration: underline;
+  }
+  
+  /* Responsive */
+  @media (max-width: 500px) {
+    .auth-card {
+      padding: 1.5rem 0.7rem 1rem 0.7rem;
+      max-width: 98vw;
+    }
+  }
+  
