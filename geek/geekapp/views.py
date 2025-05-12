@@ -65,6 +65,7 @@ def index_inventario(request):
         'TIPO_CHOICES': Inventario.TIPO_CHOICES,  # Para generar las opciones en la plantilla
     }) """
 
+@login_required
 def buscar_inventario(request):
     query = request.GET.get('search', '')  # Capturar el término de búsqueda
     if query:
@@ -151,6 +152,8 @@ def index_inventario(request):
     inventario = Inventario.objects.get(id=id)
     return render(request, 'ver_inventario.html', {'inventario': inventario})
  """
+
+@login_required 
 def ver_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     imagenes = AlbumImage.objects.filter(album=inventario)
@@ -181,7 +184,7 @@ def crear_inventario(request):
         form = InventarioForm()
     return render(request, 'crear_inventario.html', {'form': form})
  """
-
+@login_required
 def crear_inventario(request):
     ImageFormSet = formset_factory(UploadImageForm, extra=4)  # Permite subir hasta 4 imágenes
 
@@ -300,7 +303,8 @@ def upload_image_view(request):
         'form': form,
         'image_formset': image_formset
     }) """
-
+    
+@login_required
 def editar_inventario(request, id):
     inventario = get_object_or_404(Inventario, id=id)
     ImageFormSet = modelformset_factory(AlbumImage, form=UploadImageForm, extra=4, max_num=4, can_delete=True)
@@ -360,6 +364,7 @@ def editar_inventario(request, id):
     return render(request, 'eliminar_inventario.html', {'inventario': inventario})
  """
 
+@login_required
 def eliminar_inventario(request, id):
     inventario = Inventario.objects.get(id=id)
     if request.method == 'POST' or request.method == 'DELETE':

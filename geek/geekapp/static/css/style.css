@@ -35,6 +35,8 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
+    
+    
   }
   
   header nav {
@@ -44,6 +46,7 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0.5rem 2rem;
+    height:100px;
   }
   
   header nav ul {
