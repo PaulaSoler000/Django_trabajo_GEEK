@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Ver Inventario</h1>
-<a href="{% url 'editar_inventario' inventario.id %}">Editar</a>
+<!-- <a href="{% url 'editar_inventario' inventario.id %}">Editar</a>
 <a href="{% url 'inventario' %}">
     <input type="submit" value="Volver">
 </a>
@@ -30,5 +29,121 @@
 {% endfor %}
 {% else %}
 <p>No hay imágenes disponibles para este inventario.</p>
-{% endif %}
+{% endif %} -->
+
+<!-- <div class="inventario-view-card">
+  <div class="ivc-img">
+    {% if imagenes %}
+      <img src="{{ imagenes.0.image.url }}" alt="Imagen del inventario">
+    {% else %}
+      <div class="ivc-img-placeholder"></div>
+    {% endif %}
+  </div>
+  <div class="ivc-main">
+    <h2 class="ivc-nombre">{{ inventario.nombre_objeto }}</h2>
+    <div class="ivc-tags card-tags">
+      {% for tag in inventario.tags.all %}
+        <span class="tag">{{ tag }}</span>
+      {% empty %}
+        <span class="tag">Sin tags</span>
+      {% endfor %}
+    </div>
+    <div class="ivc-info">
+      <p><strong>Tipo Objeto:</strong> {{ inventario.tipo_objeto }}</p>
+      <p><strong>Estado:</strong> {{ inventario.estado }}</p>
+      <p><strong>Curso:</strong> {{ inventario.curso }}</p>
+      <p><strong>Fecha Salida:</strong> {{ inventario.fecha_salida }}</p>
+      <p><strong>Fecha Compra:</strong> {{ inventario.fecha_compra }}</p>
+      <p><strong>Descripción:</strong> {{ inventario.descripcion }}</p>
+      <p><strong>Edición:</strong> {{ inventario.edicion }}</p>
+      <p><strong>Editorial:</strong> {{ inventario.editorial }}</p>
+      <p><strong>Volumen:</strong> {{ inventario.volumen }}</p>
+      <p><strong>Autor:</strong> {{ inventario.autor }}</p>
+      <p><strong>Precio:</strong> {{ inventario.precio }}</p>
+      <p><strong>Género:</strong> {{ inventario.genero }}</p>
+      <p><strong>Altura:</strong> {{ inventario.altura }}</p>
+      <p><strong>Marca:</strong> {{ inventario.marca }}</p>
+      <p><strong>Plataforma:</strong> {{ inventario.plataforma }}</p>
+      <p><strong>Compañía:</strong> {{ inventario.compania }}</p>
+      <p><strong>Cantidad:</strong> {{ inventario.cantidad }}</p>
+    </div>
+    <div class="ivc-actions">
+      <a href="{% url 'editar_inventario' inventario.id %}" class="ivc-action-btn" title="Editar">Editar</a>
+      <a href="{% url 'inventario' %}" class="ivc-action-btn ivc-volver" title="Volver">Volver</a>
+    </div>
+  </div>
+</div>
+ -->
+
+ <div class="producto-container">
+  <div class="producto-gallery">
+    <!-- Carrusel de imágenes -->
+    <div class="carousel" id="carousel">
+      {% for imagen in imagenes %}
+        <div class="carousel-slide{% if forloop.first %} active{% endif %}">
+          <img src="{{ imagen.image.url }}" alt="Imagen del inventario">
+        </div>
+      {% endfor %}
+      <button class="carousel-arrow left" id="carouselPrev">&#10094;</button>
+      <button class="carousel-arrow right" id="carouselNext">&#10095;</button>
+    </div>
+  </div>
+  <div class="producto-info">
+    <div class="producto-header">
+      <h2 class="producto-nombre">{{ inventario.nombre_objeto }}</h2>
+      <span class="producto-precio">{{ inventario.precio }} €</span>
+    </div>
+    <div class="producto-tags card-tags">
+      {% for tag in inventario.tags.all %}
+        <span class="tag">{{ tag }}</span>
+      {% empty %}
+        <span class="tag">Sin tags</span>
+      {% endfor %}
+    </div>
+    <div class="producto-detalles">
+      <p><strong>Tipo:</strong> {{ inventario.tipo_objeto }}</p>
+      <p><strong>Estado:</strong> {{ inventario.estado }}</p>
+      <p><strong>Curso:</strong> {{ inventario.curso }}</p>
+      <p><strong>Fecha Salida:</strong> {{ inventario.fecha_salida }}</p>
+      <p><strong>Fecha Compra:</strong> {{ inventario.fecha_compra }}</p>
+      <p><strong>Descripción:</strong> {{ inventario.descripcion }}</p>
+      <p><strong>Edición:</strong> {{ inventario.edicion }}</p>
+      <p><strong>Editorial:</strong> {{ inventario.editorial }}</p>
+      <p><strong>Volumen:</strong> {{ inventario.volumen }}</p>
+      <p><strong>Autor:</strong> {{ inventario.autor }}</p>
+      <p><strong>Género:</strong> {{ inventario.genero }}</p>
+      <p><strong>Altura:</strong> {{ inventario.altura }}</p>
+      <p><strong>Marca:</strong> {{ inventario.marca }}</p>
+      <p><strong>Plataforma:</strong> {{ inventario.plataforma }}</p>
+      <p><strong>Compañía:</strong> {{ inventario.compania }}</p>
+      <p><strong>Cantidad:</strong> {{ inventario.cantidad }}</p>
+    </div>
+    <div class="producto-actions">
+      <a href="{% url 'editar_inventario' inventario.id %}" class="btn btn-edit">Editar</a>
+      <a href="{% url 'inventario' %}" class="btn btn-volver">Volver</a>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const slides = document.querySelectorAll('.carousel-slide');
+  let current = 0;
+  function showSlide(idx) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === idx);
+    });
+  }
+  document.getElementById('carouselPrev').onclick = function() {
+    current = (current - 1 + slides.length) % slides.length;
+    showSlide(current);
+  };
+  document.getElementById('carouselNext').onclick = function() {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  };
+  showSlide(current);
+});
+</script>
+
 {% endblock %}
