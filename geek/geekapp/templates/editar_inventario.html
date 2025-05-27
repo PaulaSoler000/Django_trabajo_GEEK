@@ -1,34 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="form-container editar-inventario">
     <h1>Editar Inventario</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         
-        {{ form.as_p }}
+        <div class="form-group">
+            {% for field in form %}
+                <div class="form-field">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     
         <h3>Imágenes</h3>
         {{ image_formset.management_form }}
         
         {% for image_form in image_formset %}
-            <div>
+            <div class="existing-image">
                 {% if image_form.instance.image %}
-                    <img src="{{ image_form.instance.image.url }}" width="100" alt="Imagen actual">
+                    <img src="{{ image_form.instance.image.url }}" alt="Imagen actual">
                 {% endif %}
-                {{ image_form.as_p }}
+                <div class="image-form">
+                    {{ image_form.as_p }}
+                </div>
             </div>
         {% endfor %}
     
-        <!-- Renderizar formularios vacíos si es necesario -->
-        {% for _ in empty_forms_needed %}
-            <div>
-                <label>Subir nueva imagen:</label>
-                <input type="file" name="image">
-            </div>
-        {% endfor %}
-        
-        <button type="submit">Guardar cambios</button>
+        <div class="buttons-container">
+            <button type="submit" class="btn-submit">Guardar cambios</button>
+            <a href="{% url 'inventario' %}" class="btn-cancel">Volver</a>
+        </div>
     </form>
-    
-    <a href="{% url 'inventario' %}"><input type="submit" value="Volver"></a>
-    
+</div>
 {% endblock %}

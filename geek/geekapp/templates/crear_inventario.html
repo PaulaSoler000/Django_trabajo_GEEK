@@ -1,19 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Crear Inventario</h1>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <h2>Información del Inventario</h2>
-    {{ inventario_form.as_p }}
-    <h2>Imágenes</h2>
-    {{ image_formset.management_form }}
-    {% for form in image_formset %}
-        <div class="image-form">
-            {{ form.as_p }}
+<div class="form-container crear-inventario">
+    <h1>Crear Inventario</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h2>Información del Inventario</h2>
+        <div class="form-group">
+            {% for field in inventario_form %}
+                <div class="form-field">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-    <button type="submit">Crear</button>
-</form>
-<a href="{% url 'inventario' %}"><input type="button" value="Volver"></a>
-
+        
+        <h2>Imágenes</h2>
+        <div class="image-formset">
+            {{ image_formset.management_form }}
+            {% for form in image_formset %}
+                <div class="image-form">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="buttons-container">
+            <button type="submit" class="btn-submit">Crear</button>
+            <a href="{% url 'inventario' %}" class="btn-cancel">Volver</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
