@@ -1,54 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Mi Proyecto{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
     <!-- Header -->
     <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'inventario' %}">Inicio</a></li>
-                <li><a href="/about/">Acerca de</a></li>
-                <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
-            </ul>
+      <nav>
+        <a href="{% url 'inventario' %}" class="logo">
+          <img id="logo" src="{% static 'img/geekmanager_gato_vertical.png' %}" alt="Gato Geek">
+        </a>
+        <ul>
+          <li><a href="{% url 'inventario' %}">Inicio</a></li>
+          <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
+        </ul>
 
-            <!-- Formulario de búsqueda -->
-            <form id="searchForm">
-                <input type="text" id="searchInput" placeholder="Buscar por nombre de objeto">
-                <button type="submit">Buscar</button>
-            </form>
-        </nav>
+        <!-- Formulario de búsqueda -->
+        <form id="searchForm">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Buscar por nombre de objeto"
+          />
+          <button type="submit">Buscar</button>
+        </form>
+      </nav>
     </header>
 
     <!-- Contenido principal -->
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <main>{% block content %} {% endblock %}</main>
 
     <!-- Footer -->
     <footer>
-        <p>© 2025 Mi Proyecto</p>
+      <p>© 2025 Mi Proyecto</p>
     </footer>
 
     <!-- Script para la búsqueda dinámica -->
     <script>
-        const searchForm = document.getElementById('searchForm');
-        const searchInput = document.getElementById('searchInput');
-    
-        searchForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const query = searchInput.value;
-            // Redirigir a la vista de inventario con el parámetro de búsqueda
-            window.location.href = `/inventario/?search=${query}`;
-        });
+      const searchForm = document.getElementById("searchForm");
+      const searchInput = document.getElementById("searchInput");
+
+      searchForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const query = searchInput.value;
+        // Redirigir a la vista de inventario con el parámetro de búsqueda
+        window.location.href = `/inventario/?search=${query}`;
+      });
     </script>
-    
-    
-</body>
+  </body>
 </html>

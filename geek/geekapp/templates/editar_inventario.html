@@ -22,12 +22,12 @@
         
         {% for image_form in image_formset %}
             <div class="existing-image">
-                {% if image_form.instance.image %}
-                    <img src="{{ image_form.instance.image.url }}" alt="Imagen actual">
-                {% endif %}
                 <div class="image-form">
                     {{ image_form.as_p }}
                 </div>
+                {% if image_form.instance.image %}
+                    <img src="{{ image_form.instance.image.url }}" alt="Imagen actual">
+                {% endif %}
             </div>
         {% endfor %}
     

@@ -54,6 +54,16 @@ header {
     gap: 2rem;
   }
   
+  nav .logo img {
+    height: 50px;
+    width: auto;
+}
+
+#logo{
+  max-width: 150px;  /* o algún tamaño pequeño */
+  height: auto;
+}
+
   header nav ul li a {
     color: #0097b2;
     font-weight: 600;
@@ -409,6 +419,7 @@ header {
     border: 1px dashed #b2d7df;
     border-radius: 8px;
     background: #f6fafd;
+    max-width: 350px;
     margin-bottom: 1rem;
 }
 
@@ -476,8 +487,8 @@ header {
 }
 
 .editar-inventario .existing-image img {
-    width: 80px;
-    height: 80px;
+    width: 25%;
+    height: 25%;
     object-fit: cover;
     border-radius: 6px;
     border: 1px solid #e3f0f3;
