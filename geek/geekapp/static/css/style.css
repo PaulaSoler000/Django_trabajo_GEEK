@@ -64,6 +64,7 @@ header {
   height: auto;
 }
 
+
   header nav ul li a {
     color: #0097b2;
     font-weight: 600;
@@ -86,11 +87,12 @@ header {
   }
   
   header input#searchInput {
-    padding: 6px 12px;
-    border-radius: 5px;
-    border: none;
+    padding: 8px 12px;
+    border-radius: 50px;
     font-size: 1rem;
+    border: none;
     outline: none;
+    background-color: #e7eff6;
   }
   
   header button[type="submit"] {
@@ -109,6 +111,7 @@ header {
     color: #fff;
     border: 1px solid #fff;
   }
+  
   
   /* --------- Filtros de inventario --------- */
 
@@ -208,10 +211,29 @@ header {
   
 
 /* --------- Lista de inventario --------- */
-.titulo{
-  text-align: center;
-  margin-bottom: 1.0rem;
+.titulo {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* opcional: centra horizontalmente */
+  text-align: center;  /* opcional: centra el texto */
+}
 
+#btn-submit {
+    background: #0097b2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+#btn-submit:hover {
+    background: #007186;
 }
 
 .inventario-cards {
@@ -243,7 +265,6 @@ header {
   
   .card-image {
     width: 100%;
-    height: 180px;
     overflow: hidden;
     border-radius: 12px;
     margin-bottom: 0.8rem;
@@ -529,132 +550,6 @@ header {
     }
 }
 
-/* --------- Ver inventario --------- */
-/* 
-.inventario-view-card {
-  display: flex;
-  align-items: flex-start;
-  background: #fff;
-  border: 2px solid #b2d7df;
-  border-radius: 18px;
-  box-shadow: 0 2px 18px rgba(0,151,178,0.06);
-  padding: 2.2rem 2.5rem;
-  max-width: 700px;
-  margin: 2.5rem auto 2rem auto;
-  gap: 2.5rem;
-}
-
-.ivc-img {
-  flex: 0 0 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ivc-img img {
-  width: 180px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid #e3f0f3;
-  background: #f0f6f8;
-}
-
-.ivc-img-placeholder {
-  width: 180px;
-  height: 180px;
-  border-radius: 12px;
-  background: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ivc-main {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  min-width: 0;
-}
-
-.ivc-nombre {
-  font-size: 1.5rem;
-  color: #0097b2;
-  font-weight: 700;
-  margin-bottom: 1.1rem;
-}
-
-.ivc-tags {
-  display: flex;
-  gap: 0.7rem;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.ivc-tag {
-  background: #e0e0e0;
-  color: #222;
-  font-size: 0.92rem;
-  font-weight: 600;
-  padding: 5px 17px;
-  border-radius: 12px;
-  letter-spacing: 0.5px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-}
-
-.ivc-tag-empty {
-  background: #f6fafd;
-  color: #b2d7df;
-}
-
-.ivc-actions {
-  display: flex;
-  gap: 2.5rem;
-  margin-top: 2.2rem;
-  align-items: center;
-}
-
-.ivc-action-btn {
-  background: none;
-  border: none;
-  color: #0097b2;
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ivc-action-btn:hover {
-  color: #007186;
-}
-
-.ivc-action-form {
-  display: inline;
-}
-
-@media (max-width: 800px) {
-  .inventario-view-card {
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1.2rem 0.7rem;
-    max-width: 98vw;
-  }
-  .ivc-main {
-    align-items: center;
-    width: 100%;
-  }
-  .ivc-actions {
-    gap: 1.5rem;
-  }
-}
- */
-
  .producto-container {
   display: flex;
   flex-direction: column;
@@ -837,7 +732,6 @@ header {
   /* RESPONSIVE HEADER & FOOTER */
   @media (max-width: 800px) {
     header nav {
-      flex-direction: column;
       gap: 1rem;
       padding: 0.8rem 1rem;
     }

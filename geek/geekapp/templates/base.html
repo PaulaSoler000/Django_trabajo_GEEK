@@ -1,46 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Mi Proyecto{% endblock %}</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-  </head>
-  <body>
-    <!-- Header -->
-    <header>
-      <nav>
-        <a href="{% url 'inventario' %}" class="logo">
-          <img id="logo" src="{% static 'img/geekmanager_gato_vertical.png' %}" alt="Gato Geek">
-        </a>
-        <ul>
-          <li><a href="{% url 'inventario' %}">Inicio</a></li>
-          <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
-        </ul>
-
-        <!-- Formulario de búsqueda -->
-        <form id="searchForm">
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Buscar por nombre de objeto"
-          />
-          <button type="submit">Buscar</button>
-        </form>
-      </nav>
-    </header>
-
-    <!-- Contenido principal -->
-    <main>{% block content %} {% endblock %}</main>
-
-    <!-- Footer -->
-    <footer>
-      <p>© 2025 Mi Proyecto</p>
-    </footer>
-
-    <!-- Script para la búsqueda dinámica -->
-    <script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Mi Proyecto{% endblock %}</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    <body>
+        <!-- Header -->
+        <header>
+            <nav>
+                    <a href="{% url 'inventario' %}" class="logo">
+                        <img id="logo" src="{% static 'img/geekmanager_gato_vertical.png' %}" alt="Gato Geek">
+                        <div class="hero"></div>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="{% url 'inventario' %}">Inicio</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'logout' %}">Cerrar sesión</a>
+                        </li>
+                    </ul>
+                <!-- Formulario de búsqueda -->
+                <form id="searchForm">
+                    <input type="text" id="searchInput" placeholder="Buscar por nombre">
+                    <button type="submit">Buscar</button>
+                </form>
+            </nav>
+        </header>
+        <!-- Contenido principal -->
+        <main>{% block content %} {% endblock %}</main>
+        <!-- Footer -->
+        <footer>
+            <p>© 2025 Mi Proyecto</p>
+        </footer>
+        <!-- Script para la búsqueda dinámica -->
+        <script>
       const searchForm = document.getElementById("searchForm");
       const searchInput = document.getElementById("searchInput");
 
@@ -50,6 +47,6 @@
         // Redirigir a la vista de inventario con el parámetro de búsqueda
         window.location.href = `/inventario/?search=${query}`;
       });
-    </script>
-  </body>
+        </script>
+    </body>
 </html>
