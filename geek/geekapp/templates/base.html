@@ -11,25 +11,34 @@
         <!-- Header -->
         <header>
             <nav>
-                    <a href="{% url 'inventario' %}" class="logo">
-                        <img id="logo" src="{% static 'img/geekmanager_gato_vertical.png' %}" alt="Gato Geek">
-                        <div class="hero"></div>
-                    </a>
-                    <ul>
-                        <li>
-                            <a href="{% url 'inventario' %}">Inicio</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'logout' %}">Cerrar sesión</a>
-                        </li>
-                    </ul>
+                <a href="{% url 'inventario' %}" class="logo">
+                    <img id="logo" src="{% static 'img/geekmanager_gato_vertical.png' %}" alt="Gato Geek">
+                    <div class="hero"></div>
+                </a>
                 <!-- Formulario de búsqueda -->
                 <form id="searchForm">
                     <input type="text" id="searchInput" placeholder="Buscar por nombre">
                     <button type="submit">Buscar</button>
                 </form>
+                <!-- Botón hamburguesa -->
+                <button class="hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <!-- Menú principal -->
+                <ul class="nav-menu">
+                    <li>
+                        <a href="{% url 'inventario' %}">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout' %}">Cerrar sesión</a>
+                    </li>
+                </ul>
             </nav>
         </header>
+
         <!-- Contenido principal -->
         <main>{% block content %} {% endblock %}</main>
         <!-- Footer -->
@@ -50,3 +59,25 @@
         </script>
     </body>
 </html>
+
+<script>
+    // Menú hamburguesa
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    hamburger.addEventListener('click', () => {
+        // Alternar clase 'active' en el menú
+        navMenu.classList.toggle('active');
+        
+        // Animación del botón hamburguesa a X
+        hamburger.classList.toggle('active');
+    });
+    
+    // Cerrar menú al hacer clic en un enlace
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
+        });
+    });
+</script>

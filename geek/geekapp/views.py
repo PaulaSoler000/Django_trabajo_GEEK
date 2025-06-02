@@ -10,6 +10,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory, modelformset_factory
+from django.core.paginator import Paginator
 
 def register_view(request):
     if request.method == 'POST':
@@ -45,25 +46,6 @@ def logout_view(request):
     return redirect(login_view)
 
 
-""" @login_required
-def index_inventario(request):
-    inventario = Inventario.objects.filter(usuario=request.user)
-    return render(request, 'index_inventario.html', {'inventario': inventario})
- """
- 
-""" @login_required
-def index_inventario(request):
-    tipo_objeto_filtro = request.GET.get('tipo_objeto', '')  # Obtiene el filtro desde la URL
-    inventario = Inventario.objects.filter(usuario=request.user)
-
-    if tipo_objeto_filtro:
-        inventario = inventario.filter(tipo_objeto=tipo_objeto_filtro)
-
-    return render(request, 'index_inventario.html', {
-        'inventario': inventario,
-        'tipo_objeto_filtro': tipo_objeto_filtro,
-        'TIPO_CHOICES': Inventario.TIPO_CHOICES,  # Para generar las opciones en la plantilla
-    }) """
 
 @login_required
 def buscar_inventario(request):
@@ -76,32 +58,9 @@ def buscar_inventario(request):
     # Devolver los resultados en formato JSON
     return JsonResponse({'inventario': list(inventario.values('id', 'nombre_objeto'))})
 
+
+
 """ @login_required
-def index_inventario(request):
-    tipo_objeto_filtro = request.GET.get('tipo_objeto', '')  # Obtiene el filtro de tipo de objeto
-    tag_filtro = request.GET.get('tag', '')  # Obtiene el filtro de tag
-    inventario = Inventario.objects.filter(usuario=request.user)
-
-    # Filtrar por tipo de objeto
-    if tipo_objeto_filtro:
-        inventario = inventario.filter(tipo_objeto=tipo_objeto_filtro)
-
-    # Filtrar por tag
-    if tag_filtro:
-        inventario = inventario.filter(tags__name=tag_filtro)  # Filtra por el nombre del tag
-
-    # Obtener todos los tags disponibles para mostrarlos en el formulario
-    tags_disponibles = Tag.objects.all()
-
-    return render(request, 'index_inventario.html', {
-        'inventario': inventario,
-        'tipo_objeto_filtro': tipo_objeto_filtro,
-        'tag_filtro': tag_filtro,
-        'TIPO_CHOICES': Inventario.TIPO_CHOICES,  # Para generar las opciones en la plantilla
-        'tags_disponibles': tags_disponibles,  # Pasa los tags disponibles al template
-    }) """
-
-@login_required
 def index_inventario(request):
     # Capturar parámetros de búsqueda y filtros
     query = request.GET.get('search', '')  # Nuevo parámetro de búsqueda
@@ -143,15 +102,56 @@ def index_inventario(request):
         'tags_disponibles': tags_disponibles,
         'ESTADO_CHOICES': Inventario.ESTADO_CHOICES,  # Para el filtro de estado
     })
+ """
 
+@login_required
+def index_inventario(request):
+    # Capturar parámetros de búsqueda y filtros
+    query = request.GET.get('search', '')
+    tipo_objeto_filtro = request.GET.get('tipo_objeto', '')
+    tag_filtro = request.GET.get('tag', '')
+    estado_filtro = request.GET.get('estado', '')
+    precio_orden = request.GET.get('precio_orden', '')
+
+    inventario = Inventario.objects.filter(usuario=request.user)
+
+    if query:
+        inventario = inventario.filter(nombre_objeto__icontains=query)
+    if tipo_objeto_filtro:
+        inventario = inventario.filter(tipo_objeto=tipo_objeto_filtro)
+    if tag_filtro:
+        inventario = inventario.filter(tags__name=tag_filtro)
+    if estado_filtro:
+        inventario = inventario.filter(estado=estado_filtro)
+    if precio_orden == 'asc':
+        inventario = inventario.order_by('precio')
+    elif precio_orden == 'desc':
+        inventario = inventario.order_by('-precio')
+
+    tags_disponibles = Tag.objects.all()
+
+    # PAGINACIÓN
+    paginator = Paginator(inventario, 20)  # 20 por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'index_inventario.html', {
+        'page_obj': page_obj,  # Usar esto en el template
+        'tipo_objeto_filtro': tipo_objeto_filtro,
+        'tag_filtro': tag_filtro,
+        'estado_filtro': estado_filtro,
+        'precio_orden': precio_orden,
+        'TIPO_CHOICES': Inventario.TIPO_CHOICES,
+        'tags_disponibles': tags_disponibles,
+        'ESTADO_CHOICES': Inventario.ESTADO_CHOICES,
+        'is_paginated': page_obj.has_other_pages(),
+        'paginator': paginator,
+        'request': request,  # Para mantener los filtros en la paginación
+    })
 
 
 # Inventario
 
-""" def ver_inventario(request, id):
-    inventario = Inventario.objects.get(id=id)
-    return render(request, 'ver_inventario.html', {'inventario': inventario})
- """
 
 @login_required 
 def ver_inventario(request, id):
@@ -159,31 +159,7 @@ def ver_inventario(request, id):
     imagenes = AlbumImage.objects.filter(album=inventario)
     return render(request, 'ver_inventario.html', {'inventario': inventario, 'imagenes': imagenes})
 
- 
-""" @login_required
-def crear_inventario(request):
-    if request.method == 'POST':
-        form = InventarioForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(index_inventario)
-    else:
-        form = InventarioForm()
-    return render(request, 'crear_inventario.html', {'form': form}) """
-""" 
-@login_required
-def crear_inventario(request):
-    if request.method == 'POST':
-        form = InventarioForm(request.POST)
-        if form.is_valid():
-            inventario = form.save(commit=False)
-            inventario.usuario = request.user
-            inventario.save()
-            return redirect(index_inventario)
-    else:
-        form = InventarioForm()
-    return render(request, 'crear_inventario.html', {'form': form})
- """
+
 @login_required
 def crear_inventario(request):
     ImageFormSet = formset_factory(UploadImageForm, extra=4)  # Permite subir hasta 4 imágenes
@@ -217,92 +193,6 @@ def crear_inventario(request):
         'image_formset': image_formset
     })
 
-""" @login_required
-def upload_image_view(request):
-    if request.method == 'POST':
-        form = UploadImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            message = "Image uploaded succesfully!"
-    else:
-        form = UploadImageForm()
-
-    return render('albums/upload.html', locals(), context_instance=RequestContext(request))
- """
-
-""" def editar_inventario(request, id):
-    inventario = get_object_or_404(Inventario, id=id)
-    
-    # Creamos un formset con exactamente 4 formularios (uno por cada imagen que queremos mostrar siempre)
-    ImageFormSet = modelformset_factory(AlbumImage, form=UploadImageForm, extra=0, max_num=4)
-    
-    # Obtenemos las imágenes existentes del inventario
-    existing_images = inventario.images.all()
-    
-    # Si hay menos de 4 imágenes, agregamos formularios vacíos hasta completar los 4
-    empty_forms_needed = 4 - existing_images.count()
-    
-    if request.method == 'POST':
-        form = InventarioForm(request.POST, instance=inventario)
-        image_formset = ImageFormSet(request.POST, request.FILES, queryset=existing_images)
-        
-        if form.is_valid() and image_formset.is_valid():
-            form.save()
-            
-            # Guardar imágenes nuevas reemplazando las antiguas
-            for form in image_formset:
-                if form.cleaned_data.get('image'):  # Solo guardar si hay imagen
-                    image = form.save(commit=False)
-                    image.album = inventario
-                    image.save()
-                    
-            return redirect('inventario')
-    else:
-        form = InventarioForm(instance=inventario)
-        image_formset = ImageFormSet(queryset=existing_images)
-
-    return render(request, 'editar_inventario.html', {
-        'form': form,
-        'image_formset': image_formset,
-        'empty_forms_needed': range(empty_forms_needed)  # Para renderizar formularios vacíos en la plantilla
-    })
-     """
-     
-     
-""" def editar_inventario(request, id):
-    inventario = get_object_or_404(Inventario, id=id)
-
-    # Permitir hasta 4 imágenes en total (existentes + nuevas)
-    ImageFormSet = modelformset_factory(AlbumImage, form=UploadImageForm, extra=4, max_num=4, can_delete=True)
-
-    existing_images = inventario.images.all()
-    
-    if request.method == 'POST':
-        form = InventarioForm(request.POST, instance=inventario)
-        image_formset = ImageFormSet(request.POST, request.FILES, queryset=existing_images)
-
-        if form.is_valid() and image_formset.is_valid():
-            form.save()
-            
-            for image_form in image_formset:
-                if image_form.cleaned_data.get('image'):  # Solo guardar si hay imagen
-                    image = image_form.save(commit=False)
-                    image.album = inventario  # Asociar la imagen con el inventario
-                    image.save()
-                
-                if image_form.cleaned_data.get('DELETE'):  # Eliminar imagen si el usuario lo indica
-                    image_form.instance.delete()
-            
-            return redirect('inventario')
-    
-    else:
-        form = InventarioForm(instance=inventario)
-        image_formset = ImageFormSet(queryset=existing_images)
-
-    return render(request, 'editar_inventario.html', {
-        'form': form,
-        'image_formset': image_formset
-    }) """
     
 @login_required
 def editar_inventario(request, id):
@@ -341,28 +231,7 @@ def editar_inventario(request, id):
         'inventario': inventario,
     })
     
-""" def editar_inventario(request, id):
-    inventario = Inventario.objects.get(id=id)
-    if request.method == 'POST':
-        form = InventarioForm(request.POST, instance=inventario)
-        if form.is_valid():
-            form.save()
-            return redirect(index_inventario)
-    else:
-        form = InventarioForm(instance=inventario)
-    return render(request, 'editar_inventario.html', {'form': form})
- """
- 
- 
- 
- 
-""" def eliminar_inventario(request, id):
-    inventario = Inventario.objects.get(id=id)
-    if request.method == 'POST' or request.method == 'DELETE':
-        inventario.delete()
-        return redirect(index_inventario)
-    return render(request, 'eliminar_inventario.html', {'inventario': inventario})
- """
+
 
 @login_required
 def eliminar_inventario(request, id):
@@ -380,43 +249,4 @@ def eliminar_inventario(request, id):
                 
         return redirect(index_inventario)
     return render(request, 'eliminar_inventario.html', {'inventario': inventario})
-
-# tipoObjeto	
-
-""" def index_tipoObjeto(request):
-    tipoObjeto = TipoObjeto.objects.all()
-    return render(request, 'index_tipoObjeto.html', {'tipoObjeto': tipoObjeto})
-
-def ver_tipoObjeto(request, id):
-    tipoObjeto = TipoObjeto.objects.get(id=id)
-    return render(request, 'ver_tipoObjeto.html', {'tipoObjeto': tipoObjeto})
-
-def crear_tipoObjeto(request):
-    if request.method == 'POST':
-        form = TipoObjetoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(index_tipoObjeto)
-    else:
-        form = TipoObjetoForm()
-    return render(request, 'crear_tipoObjeto.html', {'form': form})
-
-def editar_tipoObjeto(request, id):
-    tipoObjeto = TipoObjeto.objects.get(id=id)
-    if request.method == 'POST':
-        form = TipoObjetoForm(request.POST, instance=tipoObjeto)
-        if form.is_valid():
-            form.save()
-            return redirect(index_tipoObjeto)
-    else:
-        form = TipoObjetoForm(instance=tipoObjeto)
-    return render(request, 'editar_tipoObjeto.html', {'form': form})
-
-def eliminar_tipoObjeto(request, id):
-    tipoObjeto = TipoObjeto.objects.get(id=id)
-    if request.method == 'POST' or request.method == 'DELETE':
-        tipoObjeto.delete()
-        return redirect(index_tipoObjeto)
-    return render(request, 'eliminar_tipoObjeto.html', {'tipoObjeto': tipoObjeto}) """
-
 

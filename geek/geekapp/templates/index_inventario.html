@@ -4,10 +4,9 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-        
 
-        <!-- Filtros -->
-        <form method="GET" class="form-filtros">
+<!-- Filtros -->
+<form method="GET" class="form-filtros">
             <label for="tipo_objeto">Filtrar por tipo de objeto:</label>
             <select name="tipo_objeto">
                 <option value="">Todos</option>
@@ -43,57 +42,156 @@
         </form>
         
 
-        <!-- Aquí se mostrarán los resultados de la búsqueda -->
-         <div class="titulo">
-            <h2>Inventario</h2>
-            <a href="{% url 'crear_inventario' %}" id="btn-submit">Crear Inventario</a>
+<div class="titulo">
+    <h2>Inventario</h2>
+    <a href="{% url 'crear_inventario' %}" id="btn-submit">Crear Inventario</a>
+</div>
 
+<!-- Botones para cambiar de vista -->
+<div class="view-switcher" style="margin-bottom: 1em; text-align:center;">
+  <button type="button" id="btn-cards" class="active">Tarjetas</button>
+  <button type="button" id="btn-table">Tabla</button>
+</div>
+
+
+
+<!-- Vista Tarjetas -->
+<ul id="inventarioList" class="inventario-cards">
+    {% for item in page_obj %}
+    <li class="card-item">
+        <div class="card-image">
+            {% if item.images.first %}
+                <img src="{{ item.images.first.image.url }}" alt="{{ item.nombre_objeto }}">
+            {% else %}
+                <img src="{% static 'img/default-image.png' %}" alt="Imagen por defecto">
+            {% endif %}
         </div>
-        <!-- <ul id="inventarioList">
-            {% for item in inventario %}
-                <li>
-                    <a href="{% url 'ver_inventario' item.id %}">{{ item.nombre_objeto }}</a>
-                    <a href="{% url 'editar_inventario' item.id %}">Editar</a>
-                    <form action="{% url 'eliminar_inventario' item.id %}" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" value="Eliminar">
-                    </form>
-                </li>
-            {% endfor %}
-        </ul> -->
+        <div class="card-content">
+            <h3>{{ item.nombre_objeto }}</h3>
+            <div class="card-tags">
+                {% for tag in item.tags.all %}
+                    <span class="tag">{{ tag.name }}</span>
+                {% empty %}
+                    <span class="tag">Sin tags</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="card-actions">
+            <a href="{% url 'ver_inventario' item.id %}" title="Información" class="btn-info">ℹ️</a>
+            <a href="{% url 'editar_inventario' item.id %}" title="Editar" class="btn-edit">✏️</a>
+            <form action="{% url 'eliminar_inventario' item.id %}" method="POST" class="delete-form" title="Eliminar">
+                {% csrf_token %}
+                <button type="submit" class="btn-delete">🗑️</button>
+            </form>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
 
-        <ul id="inventarioList" class="inventario-cards">
-            {% for item in inventario %}
-            <li class="card-item">
-                <div class="card-image">
-                    {% if item.images.first %}
-                        <img src="{{ item.images.first.image.url }}" alt="{{ item.nombre_objeto }}">
-                    {% else %}
-                        <img src="{% static 'img/default-image.png' %}" alt="Imagen por defecto">
-                    {% endif %}
-                </div>
-                <div class="card-content">
-                    <h3>{{ item.nombre_objeto }}</h3>
-                    <div class="card-tags">
-                        {% for tag in item.tags.all %}
-                            <span class="tag">{{ tag.name }}</span>
-                        {% empty %}
-                            <span class="tag">Sin tags</span>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="card-actions">
-                    <a href="{% url 'ver_inventario' item.id %}" title="Información" class="btn-info">ℹ️</a>
-                    <a href="{% url 'editar_inventario' item.id %}" title="Editar" class="btn-edit">✏️</a>
-                    <form action="{% url 'eliminar_inventario' item.id %}" method="POST" class="delete-form" title="Eliminar">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-delete">🗑️</button>
-                    </form>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-        
+<!-- Vista Tabla (oculta por defecto) -->
+<table id="inventarioTable" class="inventario-table" style="display: none; width: 100%; border-collapse: collapse; margin-top: 1em;">
+    <thead>
+        <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Tags</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in page_obj %}
+        <tr>
+            <td>
+                {% if item.images.first %}
+                    <img src="{{ item.images.first.image.url }}" alt="{{ item.nombre_objeto }}" style="width:48px; border-radius:8px;">
+                {% else %}
+                    <img src="{% static 'img/default-image.png' %}" alt="Imagen por defecto" style="width:48px; border-radius:8px;">
+                {% endif %}
+            </td>
+            <td>{{ item.nombre_objeto }}</td>
+            <td>
+                {% for tag in item.tags.all %}
+                    <span class="tag">{{ tag.name }}</span>
+                {% empty %}
+                    <span class="tag">Sin tags</span>
+                {% endfor %}
+            </td>
+            <td>
+                <a href="{% url 'ver_inventario' item.id %}" title="Información" class="btn-info">ℹ️</a>
+                <a href="{% url 'editar_inventario' item.id %}" title="Editar" class="btn-edit">✏️</a>
+                <form action="{% url 'eliminar_inventario' item.id %}" method="POST" class="delete-form" title="Eliminar" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-delete">🗑️</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
+
+<nav class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?{{ url_params }}{% if url_params %}&{% endif %}page={{ page_obj.previous_page_number }}">Anterior</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if num == page_obj.number %}
+            <span class="current">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?{{ url_params }}{% if url_params %}&{% endif %}page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a href="?{{ url_params }}{% if url_params %}&{% endif %}page={{ page_obj.next_page_number }}">Siguiente</a>
+    {% endif %}
+</nav>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnCards = document.getElementById('btn-cards');
+    const btnTable = document.getElementById('btn-table');
+    const cards = document.getElementById('inventarioList');
+    const table = document.getElementById('inventarioTable');
+
+    // Función para mostrar tarjetas
+    btnCards.addEventListener('click', function() {
+        cards.style.display = '';
+        table.style.display = 'none';
+        localStorage.setItem('viewMode', 'cards');
+    });
+
+    // Función para mostrar tabla
+    btnTable.addEventListener('click', function() {
+        cards.style.display = 'none';
+        table.style.display = '';
+        localStorage.setItem('viewMode', 'table');
+    });
+
+    // Al cargar la página, recuerda la vista seleccionada
+    const savedMode = localStorage.getItem('viewMode');
+    if (savedMode === 'table') {
+        cards.style.display = 'none';
+        table.style.display = '';
+    } else {
+        cards.style.display = '';
+        table.style.display = 'none';
+    }
+});
+
+const btnCards = document.getElementById('btn-cards');
+  const btnTable = document.getElementById('btn-table');
+
+  btnCards.addEventListener('click', () => {
+    btnCards.classList.add('active');
+    btnTable.classList.remove('active');
+  });
+
+  btnTable.addEventListener('click', () => {
+    btnTable.classList.add('active');
+    btnCards.classList.remove('active');
+  });
+</script>
 
 {% endblock %}

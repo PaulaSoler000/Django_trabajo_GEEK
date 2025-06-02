@@ -112,6 +112,104 @@ header {
     border: 1px solid #fff;
   }
   
+  /* Estilos para el menú hamburguesa */
+.hamburger {
+    display: none; /* Oculto por defecto */
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #0097b2;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+/* Estilos para móviles */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Mostrar solo en móviles */
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 100px;
+        left: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: calc(100vh - 100px);
+        background: white;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 2rem 0;
+        transition: left 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        z-index: 999;
+    }
+    
+    .nav-menu.active {
+        left: 0;
+    }
+    
+    .nav-menu li {
+        width: 100%;
+        text-align: center;
+        margin: 0.5rem 0;
+    }
+    
+    .nav-menu li a {
+        display: block;
+        padding: 1rem;
+        width: 100%;
+    }
+    
+    header nav {
+        flex-wrap: nowrap; /* Importante: NO wrap */
+        height: 100px;
+        padding: 1rem;
+    }
+    
+    .logo {
+        order: 1;
+        flex: 0 0 auto;
+    }
+    
+    #searchForm {
+        order: 2;
+        width: auto;
+        flex: 1 1 auto;
+        margin: 0 0.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .hamburger {
+        order: 3;
+        margin-left: 0;
+        flex: 0 0 auto;
+    }
+}
+
+/* Animación del botón hamburguesa a X */
+.hamburger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
   
   /* --------- Filtros de inventario --------- */
 
@@ -357,6 +455,114 @@ header {
     }
   }
   
+.inventario-table {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 16px rgba(0,151,178,0.07);
+    margin: 0 auto 4rem auto;
+    max-width: 1200px;
+    overflow: hidden;
+    font-size: 1rem;
+    text-align: center;
+}
+.inventario-table th, .inventario-table td {
+    padding: 0.8em 1em;
+    text-align: left;
+    border-bottom: 1px solid #e3f0f3;
+}
+.inventario-table th {
+    background: #e7f7fa;
+    color: #0097b2;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+.inventario-table tr:last-child td {
+    border-bottom: none;
+}
+.inventario-table tr:hover {
+    background: #e0f3f7;
+}
+.inventario-table .tag {
+    background: #b2d7df;
+    color: #004d59;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    margin-right: 0.2em;
+}
+.inventario-table .btn-info,
+.inventario-table .btn-edit,
+.inventario-table .btn-delete {
+    background: #0097b2;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 0.2em;
+    transition: background 0.3s;
+    font-size: 1.2em;
+}
+.inventario-table .btn-info:hover,
+.inventario-table .btn-edit:hover,
+.inventario-table .btn-delete:hover {
+    background: #007186;
+}
+
+.view-switcher button {
+  padding: 0.5em 1em;
+  border: none;
+  cursor: pointer;
+  background-color: #ddd;
+  transition: background-color 0.3s;
+  margin: 0 5px;
+  border-radius: 5px;
+}
+
+.view-switcher button.active {
+  background-color: #007bff; /* Color azul activo */
+  color: white;
+}
+
+.view-switcher button.active,
+.view-switcher button:hover {
+    background: #0097b2;
+    color: #fff;
+    border: 1px solid #0097b2;
+}
+
+
+.pagination {
+    text-align: center;
+    margin: 2em 0;
+}
+.pagination a, .pagination span.current {
+    display: inline-block;
+    margin: 0 4px;
+    padding: 0.5em 1em;
+    border-radius: 6px;
+    background: #e0f3f7;
+    color: #0097b2;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+.pagination span.current {
+    background: #0097b2;
+    color: #fff;
+}
+.pagination a:hover {
+    background: #0097b2;
+    color: #fff;
+}
+
 
 /* --------- Formularios inventario --------- */
 .form-container {
