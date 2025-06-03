@@ -58,7 +58,7 @@
 <!-- Vista Tarjetas -->
 <ul id="inventarioList" class="inventario-cards">
     {% for item in page_obj %}
-    <li class="card-item">
+    <li class="card-item" data-url="{% url 'ver_inventario' item.id %}">
         <div class="card-image">
             {% if item.images.first %}
                 <img src="{{ item.images.first.image.url }}" alt="{{ item.nombre_objeto }}">
@@ -100,7 +100,7 @@
     </thead>
     <tbody>
         {% for item in page_obj %}
-        <tr>
+        <tr class="row-item" data-url="{% url 'ver_inventario' item.id %}">
             <td>
                 {% if item.images.first %}
                     <img src="{{ item.images.first.image.url }}" alt="{{ item.nombre_objeto }}" style="width:48px; border-radius:8px;">
@@ -116,18 +116,31 @@
                     <span class="tag">Sin tags</span>
                 {% endfor %}
             </td>
-            <td>
-                <a href="{% url 'ver_inventario' item.id %}" title="Información" class="btn-info">ℹ️</a>
-                <a href="{% url 'editar_inventario' item.id %}" title="Editar" class="btn-edit">✏️</a>
-                <form action="{% url 'eliminar_inventario' item.id %}" method="POST" class="delete-form" title="Eliminar" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-delete">🗑️</button>
-                </form>
+            <td class="card-actions">
+                <div class="card-actions">
+                    <a href="{% url 'ver_inventario' item.id %}" title="Información" class="btn-info">ℹ️</a>
+                    <a href="{% url 'editar_inventario' item.id %}" title="Editar" class="btn-edit">✏️</a>
+                    <form action="{% url 'eliminar_inventario' item.id %}" method="POST" class="delete-form" title="Eliminar">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-delete">🗑️</button>
+                    </form>
+                </div>
             </td>
+
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<div id="modal-eliminar" class="modal-eliminar-overlay" style="display:none;">
+  <div class="modal-eliminar">
+    <h2>¿Estás seguro de que quieres eliminar este elemento?</h2>
+    <div class="modal-eliminar-buttons">
+      <button id="confirmar-eliminar" class="btn-submit" type="button">Eliminar</button>
+      <button id="cancelar-eliminar" class="btn-cancel" type="button">Cancelar</button>
+    </div>
+  </div>
+</div>
 
 
 <nav class="pagination">
@@ -192,6 +205,43 @@ const btnCards = document.getElementById('btn-cards');
     btnTable.classList.add('active');
     btnCards.classList.remove('active');
   });
+
+  document.querySelectorAll('.card-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+        // Evita que los clics en botones dentro de la tarjeta activen la redirección
+        if (e.target.closest('.card-actions')) return;
+        window.location.href = this.dataset.url;
+    });
+});
+document.querySelectorAll('.row-item').forEach(row => {
+    row.addEventListener('click', function(e) {
+        // Evita que los clics en botones dentro de la fila activen la redirección
+        if (e.target.closest('.card-actions')) return;
+        window.location.href = this.dataset.url;
+    });
+});
+
+let formAEliminar = null;
+
+document.querySelectorAll('.delete-form').forEach(form => {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    formAEliminar = this;
+    document.getElementById('modal-eliminar').style.display = 'flex';
+  });
+});
+
+document.getElementById('cancelar-eliminar').addEventListener('click', function() {
+  document.getElementById('modal-eliminar').style.display = 'none';
+  formAEliminar = null;
+});
+
+document.getElementById('confirmar-eliminar').addEventListener('click', function() {
+  if (formAEliminar) {
+    formAEliminar.submit();
+  }
+});
+
 </script>
 
 {% endblock %}

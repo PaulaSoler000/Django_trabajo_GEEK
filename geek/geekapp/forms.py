@@ -20,6 +20,17 @@ class InventarioForm(forms.ModelForm):
         widgets = {
             'tags': TagWidget(attrs={'placeholder': 'Escribe los tags separados por comas'}),}
 
+    def clean_tags(self):
+        tags = self.cleaned_data['tags']
+        # Si el usuario escribe los tags como texto, conviértelos a lista
+        if hasattr(tags, 'all'):
+            tags_list = list(tags.all())
+        else:
+            tags_list = list(tags)
+        if len(tags_list) > 5:
+            raise forms.ValidationError("No puedes añadir más de 5 tags.")
+        return tags
+        
 class UploadImageForm(forms.ModelForm):
 
     class Meta:
