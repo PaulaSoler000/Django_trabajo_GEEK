@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="form-container crear-inventario">
-    <h1>Crear Inventario</h1>
+    <h1>Añadir</h1>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <h2>Información del Inventario</h2>
+        <h2>Información del objeto</h2>
         <div class="form-group">
             {% for field in inventario_form %}
                 <div class="form-field">
